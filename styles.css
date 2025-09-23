@@ -1,0 +1,151 @@
+/* Global Styles */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --text-color: #333;
+    --text-light: #7f8c8d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f5f6fa;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: var(--secondary-color);
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+}
+
+/* Header Styles */
+.header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.header p {
+    font-size: 1.2rem;
+    color: var(--light-color);
+}
+
+/* Navigation */
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar li {
+    padding: 1rem 0;
+}
+
+.navbar a {
+    color: var(--dark-color);
+    padding: 1rem 1.5rem;
+    display: block;
+    font-weight: 500;
+}
+
+.navbar a:hover, .navbar a.active {
+    color: var(--secondary-color);
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+/* Main Content */
+main {
+    padding: 2rem 0;
+}
+
+.intro {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.intro h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+/* Visualization Container */
+.visualization-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.visualization-placeholder {
+    background-color: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 4px;
+    padding: 3rem 1rem;
+    text-align: center;
+    color: var(--text-light);
+    margin-top: 1rem;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark-color);
+    color: white;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navbar ul {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .navbar a {
+        padding: 0.8rem 0;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .visualization-container {
+        padding: 1rem;
+    }
+}
