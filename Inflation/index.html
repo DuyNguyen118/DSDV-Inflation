@@ -25,7 +25,26 @@
         <!-- Vietnam GDP Growth Chart Section -->
         <section class="full-width-chart">
             <h3>Vietnam GDP Growth (1990-2024)</h3>
-            <div class="visualization-placeholder" id="gdp-growth-chart"></div>
+            <div id="gdp-growth-chart"></div>
+        </section>
+
+        <!-- Vietnam CPI Chart Section -->
+        <section class="cpi-chart-section">
+            <div id="cpi-chart"></div>
+        </section>
+
+        <!-- Food Consumption Chart Section -->
+        <section class="full-width-chart">
+            <h3>Types of Food - Consumption by Year</h3>
+            <div class="slider-container">
+                <label for="year-slider" class="slider-label">Year: <span id="selected-year">2024</span></label>
+                <input type="range" id="year-slider" min="0" max="11" value="11" step="1" class="slider">
+                <div class="slider-labels">
+                    <span>2002</span>
+                    <span>2024</span>
+                </div>
+            </div>
+            <div id="food-consumption-chart"></div>
         </section>
     </main>
 
