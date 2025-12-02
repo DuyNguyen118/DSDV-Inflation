@@ -166,6 +166,72 @@ main {
     overflow: visible;
 }
 
+/* Global Map Styles */
+#global-map-container {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+}
+
+#global-inflation-map {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#global-inflation-map svg {
+    max-width: 100%;
+    height: auto;
+}
+
+#map-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.legend-color {
+    width: 30px;
+    height: 20px;
+    border: 1px solid #ccc;
+    margin-right: 8px;
+}
+
+.country {
+    stroke: #fff;
+    stroke-width: 0.5px;
+    cursor: pointer;
+    transition: stroke-width 0.2s;
+}
+
+.country:hover {
+    stroke-width: 2px;
+    stroke: #333;
+}
+
+.country.no-data {
+    fill: #e0e0e0;
+    cursor: not-allowed;
+}
+
 .slider-container {
     margin: 20px 0;
     padding: 20px;
