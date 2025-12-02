@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vietnam Inflation vs GDP (Full series)</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <h1>Vietnam CPI Inflation vs GDP Growth</h1>
+  <div class="subtitle">
+    Full available series from World Development Indicators · annotated for key recent shocks
+  </div>
+
+  <div id="chart-container">
+    <div class="top-bar">
+      <div class="axis-toggle">
+        <span class="axis-toggle-label">Axis mode:</span>
+        <label class="switch">
+          <input id="axis-toggle-input" type="checkbox" />
+          <span class="slider"></span>
+        </label>
+        <span id="axis-toggle-text">Dual axis</span>
+      </div>
+    </div>
+
+    <svg id="chart" width="860" height="420"></svg>
+
+    <div class="legend">
+      <div class="legend-item">
+        <span class="legend-swatch" style="background:#38bdf8;"></span>
+        <span>CPI inflation (%)</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-swatch" style="background:#fb7185;"></span>
+        <span>GDP growth (%)</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
