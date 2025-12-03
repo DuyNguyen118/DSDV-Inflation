@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPI Heatmap Visualization</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Consumer Price Index (CPI) Heatmap</h2>
+        <p class="subtitle">Year-on-Year Comparison (Base: Previous Year = 100)</p>
+        
+        <div id="chart-container">
+            <svg id="heatmap"></svg>
+            <div id="tooltip" class="tooltip"></div>
+        </div>
+    </div>
+
+    <script src="heatmap.js"></script>
+</body>
+</html>
