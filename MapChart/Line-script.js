@@ -1,8 +1,12 @@
-// ---- 1. Load Vietnam data from WDI CSVs ----
-Promise.all([
-  d3.csv("inflation-consumer-price.csv"),
-  d3.csv("gdp-growth-rate.csv"),
-]).then(([inflRaw, gdpRaw]) => {
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ---- 1. Load Vietnam data from WDI CSVs ----
+    console.log("Loading data...");
+    Promise.all([
+        d3.csv("data/inflation-consumer-price.csv"),
+        d3.csv("data/gdp-growth-rate.csv"),
+    ]).then(([inflRaw, gdpRaw]) => {
+        console.log("Data loaded, processing...");
   const inflRow = inflRaw.find(
     (d) =>
       d["Country Code"] === "VNM" &&
@@ -31,14 +35,28 @@ Promise.all([
     })
     .filter((d) => d !== null);
 
-  drawChart(data);
+        drawChart(data);
+    }).catch(error => {
+        console.error("Error loading CSV data:", error);
+    });
 });
 
 // ---- 2. Chart with hover + dynamic annotations ----
 function drawChart(data) {
-  const svg = d3.select("#chart");
-  const width = +svg.attr("width");
-  const height = +svg.attr("height");
+  const container = d3.select("#vietnam-chart-container");
+  container.select("svg").remove(); // Clear any existing chart
+  
+  const width = 700;
+  const height = 400;
+  
+  const svg = container.append("svg")
+      .attr("id", "vietnam-chart")
+      .attr("width", "100%")
+      .attr("height", "100%")
+      .attr("viewBox", `0 0 ${width} ${height}`)
+      .attr("preserveAspectRatio", "xMidYMid meet");
+      
+  console.log("SVG container created");
 
   const margin = { top: 32, right: 64, bottom: 40, left: 56 };
   const innerWidth = width - margin.left - margin.right;
@@ -53,6 +71,10 @@ function drawChart(data) {
   const axisToggleText = document.getElementById("axis-toggle-text");
 
   let axisMode = "dual"; // 'dual' or 'single'
+
+  // Sync the checkbox with the initial mode
+  axisToggleInput.checked = false;  // false for dual axis
+  axisToggleText.textContent = "Dual axis";
 
   const x = d3
     .scaleLinear()
@@ -321,10 +343,9 @@ function drawChart(data) {
     }
   }
 
-  axisToggleInput.addEventListener("change", () => {
-    axisMode = axisToggleInput.checked ? "single" : "dual";
-    axisToggleText.textContent =
-      axisMode === "dual" ? "Dual axis" : "Single axis";
+  axisToggleInput.addEventListener("change", function() {
+    axisMode = this.checked ? "single" : "dual";
+    axisToggleText.textContent = this.checked ? "Single axis" : "Dual axis";
     updateYDomains();
     redrawAxesAndLines(true);
   });
