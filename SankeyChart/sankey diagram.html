@@ -1,1 +1,513 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vietnam CPI Inflation Analysis - Enhanced</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* GIỮ NGUYÊN CSS CỦA BẢN KB GỐC */
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-main: #2c3e50;
+      --text-secondary: #546e7a;
+      --border-color: #e0e0e0;
+      
+      --cause-node: #1e5266;
+      --sector-node: #3d7a8f;
+      --total-node: #f39c12;
+      --cons-node: #e74c3c;
 
+      --flow-pos-rgb: 46, 204, 113;
+      --flow-neg-rgb: 231, 76, 60;
+      --flow-neu-rgb: 90, 110, 120;
+
+      --bg-pos: #e8f5e9;
+      --text-pos: #2e7d32;
+      --bg-neg: #ffebee;
+      --text-neg: #c62828;
+
+      --primary: #3d7a8f;
+      --primary-hover: #2c5f73;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecef 100%);
+      color: var(--text-main);
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--cause-node) 0%, var(--sector-node) 100%);
+      color: white;
+      padding: 32px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .header-left h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .header-left p { font-size: 15px; opacity: 0.9; font-weight: 300; }
+
+    .year-toggle { display: flex; gap: 0; background: rgba(255,255,255,0.15); border-radius: 12px; padding: 4px; backdrop-filter: blur(10px); }
+    .year-btn { padding: 12px 32px; border: none; background: transparent; color: rgba(255,255,255,0.7); font-size: 18px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+    .year-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+    .year-btn.active { background: white; color: var(--cause-node); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+
+    .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 40px; background: #fafbfc; border-bottom: 1px solid var(--border-color); }
+    .summary-card { background: white; padding: 20px; border-radius: 12px; border-left: 4px solid var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.2s ease; }
+    .summary-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .summary-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary); font-weight: 600; margin-bottom: 8px; }
+    .summary-value { font-size: 20px; font-weight: 700; color: var(--text-main); display:flex; align-items:center; gap:8px; }
+    .summary-value .icon-up { color: var(--text-pos); font-weight:900; }
+    .summary-value .icon-down { color: var(--text-neg); font-weight:900; }
+    .summary-value.positive { color: var(--text-pos); }
+    .summary-value.negative { color: var(--text-neg); }
+    .summary-value.neutral { color: var(--text-main); }
+
+    .main-content { padding: 40px; }
+
+    .legend { display: flex; gap: 24px; margin-bottom: 24px; font-size: 13px; color: var(--text-secondary); flex-wrap: wrap; padding: 16px 20px; background: #fafbfc; border-radius: 8px; }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .legend-divider { width: 1px; height: 20px; background: var(--border-color); margin: 0 8px; }
+
+    #chart { width: 100%; height: 700px; margin-bottom: 40px; background: white; border-radius: 8px; border: 1px solid var(--border-color); }
+
+    .table-section { margin-top: 40px; }
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .table-header h2 { font-size: 20px; font-weight: 600; color: var(--text-main); }
+    .table-container { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; background: white; }
+    th { background: linear-gradient(to bottom, #f8f9fa, #f1f3f5); color: var(--text-secondary); font-weight: 600; padding: 16px; text-align: left; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+    td { padding: 14px 16px; border-bottom: 1px solid #f0f0f0; color: var(--text-main); }
+    tbody tr:hover { background-color: #fafbfc; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    .trend-up { color: var(--text-pos); font-weight: 600; background: var(--bg-pos); padding: 4px 10px; border-radius: 6px; display: inline-block; }
+    .trend-down { color: var(--text-neg); font-weight: 600; background: var(--bg-neg); padding: 4px 10px; border-radius: 6px; display: inline-block; }
+    .neutral { color: var(--text-main); font-weight: 600; background: transparent; padding: 0; border-radius: 0; display: inline-block; }
+
+    .delta-col { background-color: #fafbfc; }
+    .center { text-align: center; }
+    .total-row { background: linear-gradient(to right, #f8f9fa, #ffffff) !important; font-weight: 600; border-top: 2px solid var(--primary) !important; border-bottom: 2px solid var(--primary) !important; }
+
+    .note { margin-top: 30px; padding: 20px; background: #fafbfc; border-radius: 8px; font-size: 13px; color: var(--text-secondary); line-height: 1.8; border-left: 3px solid var(--primary); }
+    .note strong { color: var(--text-main); }
+
+    @media (max-width: 768px) {
+      .header { flex-direction: column; text-align: center; }
+      .summary-cards { grid-template-columns: 1fr; }
+      #chart { height: 600px; }
+      .main-content { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="header">
+      <div class="header-left">
+        <h1>Vietnam CPI Inflation Analysis</h1>
+        <p>Attribution Flow & Macroeconomic Consequences (2021-2022)</p>
+      </div>
+      <div class="year-toggle">
+        <button class="year-btn" data-year="2021">2021</button>
+        <button class="year-btn active" data-year="2022">2022</button>
+      </div>
+    </div>
+
+    <div class="summary-cards" id="summaryCards" aria-live="polite"></div>
+
+    <div class="main-content">
+      <div class="legend">
+        <div class="legend-item">
+          <span class="dot" style="background:var(--cause-node)"></span>
+          <span>Macro Drivers</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot" style="background:var(--sector-node)"></span>
+          <span>CPI Sectors</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot" style="background:var(--total-node)"></span>
+          <span>Headline CPI</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot" style="background:var(--cons-node)"></span>
+          <span>Economic Impact</span>
+        </div>
+
+        <div class="legend-divider"></div>
+
+        <div class="legend-item">
+          <span class="dot" style="background:rgba(46,204,113,0.7)"></span>
+          <span>Inflationary Pressure</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot" style="background:rgba(231,76,60,0.7)"></span>
+          <span>Deflationary Pressure</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot" style="background:rgba(90,110,120,0.65)"></span>
+          <span>Neutral Flow</span>
+        </div>
+      </div>
+
+      <div id="chart" aria-label="Sankey chart container"></div>
+
+      <div class="table-section">
+        <div class="table-header">
+          <h2>Detailed Sector Breakdown</h2>
+        </div>
+        <div class="table-container">
+          <table id="dataTable" role="table" aria-describedby="tableDesc">
+            <thead>
+              <tr>
+                <th rowspan="2">Sector Group</th>
+                <th colspan="2" class="center">2021</th>
+                <th colspan="2" class="center">2022</th>
+                <th rowspan="2" class="center delta-col">Year-over-Year<br><small>Change</small></th>
+              </tr>
+              <tr>
+                <th class="center num">Weight</th>
+                <th class="center num">Price Δ</th>
+                <th class="center num">Weight</th>
+                <th class="center num">Price Δ</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="note" id="tableDesc">
+        <strong>Data Source:</strong> General Statistics Office of Vietnam (GSO)<br>
+        <strong>Methodology:</strong> Attribution flows estimated using Input-Output economic modeling. Flow colors represent directional price pressure impact on headline CPI.<br>
+        <strong>Real Wage Loss:</strong> Calculated as negative CPI impact on purchasing power (2021: -1.84%, 2022: -3.15%)
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const sectorsData = {
+      "2021": [
+        { key: "food", name: "Food & Dining", weight: 53.1, change: 3.25, contrib: 1.81 },
+        { key: "fuel", name: "Fuel & Energy", weight: 9.4, change: -15.62, contrib: -1.47 },
+        { key: "trans", name: "Transportation", weight: 9.4, change: -23.03, contrib: -1.34 },
+        { key: "house", name: "Housing & Construction", weight: 5.8, change: -23.03, contrib: -1.34 },
+        { key: "edu", name: "Education", weight: 8.1, change: -0.39, contrib: -0.03 }
+      ],
+      "2022": [
+        { key: "food", name: "Food & Dining", weight: 34.0, change: 3.52, contrib: 1.06 },
+        { key: "fuel", name: "Fuel & Energy", weight: 8.5, change: 25.76, contrib: 1.42 },
+        { key: "trans", name: "Transportation", weight: 9.4, change: 11.85, contrib: 0.88 },
+        { key: "house", name: "Housing & Construction", weight: 18.5, change: 2.52, contrib: 0.47 },
+        { key: "edu", name: "Education", weight: 6.8, change: 8.56, contrib: 0.58 }
+      ]
+    };
+
+    const totals = { "2021": 1.84, "2022": 3.15 };
+    
+    const macro = {
+      "2021": { gdp: 2.58, unemp: 3.22, realWageLoss: -1.84 },
+      "2022": { gdp: 8.02, unemp: 2.32, realWageLoss: -3.15 }
+    };
+
+    const ioMap = {
+      "Global Energy Prices": { fuel: 1.0, trans: 0.04, house: 0.01, food: 0.02 },
+      "Global Inflation": { food: 0.35, house: 0.03 },
+      "Credit Policy": { house: 0.05, trans: 0.02 },
+      "Public Service Adj.": { edu: 1.0 }
+    };
+
+    const FLOW_THRESHOLD = 0.01;
+
+    function round2(x) { return Number((x).toFixed(2)); }
+    function formatPct(x) {
+      const n = Number(x);
+      const s = (n > 0 ? '+' : '') + round2(n) + '%';
+      return s;
+    }
+    function getVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+    function updateSummaryCards(year) {
+      const cards = [
+        { key: 'headline', label: "Headline CPI", v2021: formatPct(totals["2021"]), v2022: formatPct(totals["2022"]), positive: totals["2022"] - totals["2021"] > 0 },
+        { key: 'gdp', label: "GDP Growth", v2021: formatPct(macro["2021"].gdp), v2022: formatPct(macro[year].gdp), positive: macro[year].gdp - macro["2021"].gdp > 0 },
+        { key: 'realwage', label: "Real Wage Loss", v2021: formatPct(macro["2021"].realWageLoss), v2022: formatPct(macro[year].realWageLoss), positive: macro[year].realWageLoss - macro["2021"].realWageLoss > 0 },
+        { key: 'unemp', label: "Unemployment Rate", v2021: (macro["2021"].unemp>=0?'+':'') + round2(macro["2021"].unemp) + '%', v2022: (macro[year].unemp>=0?'+':'') + round2(macro[year].unemp) + '%', positive: macro[year].unemp - macro["2021"].unemp < 0 }
+      ];
+
+      const container = document.getElementById('summaryCards');
+      container.innerHTML = cards.map(card => {
+        if (year === "2021") {
+          return `
+            <div class="summary-card" role="article" aria-label="${card.label} 2021">
+              <div class="summary-label">${card.label}</div>
+              <div class="summary-value neutral">
+                <span>${card.v2021}</span>
+              </div>
+            </div>
+          `;
+        } else {
+          const isPos = card.positive;
+          const cls = isPos ? 'positive' : 'negative';
+          const icon = isPos ? '<span class="icon-up">▲</span>' : '<span class="icon-down">▼</span>';
+          return `
+            <div class="summary-card" role="article" aria-label="${card.label} 2022">
+              <div class="summary-label">${card.label}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div style="font-size:12px;color:var(--text-secondary)">
+                  <div>2021</div>
+                  <div style="font-weight:600">${card.v2021}</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:12px;color:var(--text-secondary)">2022</div>
+                  <div class="summary-value ${cls}">${card.v2022} ${icon}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+    }
+
+    function drawChart(year) {
+      const dSectors = sectorsData[year];
+      const m = macro[year];
+      
+      const causeLabels = ["Global Energy Prices", "Global Inflation", "Credit Policy", "Public Service Adj."];
+      
+      // THAY ĐỔI Ở ĐÂY: Hiển thị CPI Contribution (formatPct để có dấu + hoặc -)
+      const sectorLabels = dSectors.map(s => `${s.name}\n${formatPct(s.contrib)}`);
+      
+      // Các nhãn khác giữ nguyên logic hiển thị giá trị
+      const totalLabel = `Headline CPI\n${totals[year]}%`; 
+      
+      const consLabels = [
+        `GDP Growth\n${formatPct(m.gdp)}`, 
+        `Unemployment\n${round2(m.unemp)}%`,
+        `Real Wage Loss\n${formatPct(m.realWageLoss)}`
+      ];
+      
+      const allLabels = [...causeLabels, ...sectorLabels, totalLabel, ...consLabels];
+      
+      const idx = (name) => {
+          // Tìm index dựa trên "startsWith" để khớp với tên Sector đã thêm %
+          return allLabels.findIndex(l => l.startsWith(name));
+      };
+
+      const colors = {
+        nodeCause: getVar('--cause-node'),
+        nodeSector: getVar('--sector-node'),
+        nodeTotal: getVar('--total-node'),
+        nodeCons: getVar('--cons-node'),
+        linkPos: `rgba(${getVar('--flow-pos-rgb')}, 0.7)`,
+        linkNeg: `rgba(${getVar('--flow-neg-rgb')}, 0.7)`,
+        linkNeu: `rgba(${getVar('--flow-neu-rgb')}, 0.65)`
+      };
+
+      const nodeColors = allLabels.map((l, i) => {
+        if (i < causeLabels.length) return colors.nodeCause;
+        if (i < causeLabels.length + sectorLabels.length) return colors.nodeSector;
+        if (l.startsWith('Headline')) return colors.nodeTotal;
+        return colors.nodeCons;
+      });
+
+      const sourceIndices = [];
+      const targetIndices = [];
+      const values = [];
+      const linkColors = [];
+      const hoverTexts = [];
+
+      const sectorMap = Object.fromEntries(dSectors.map(s => [s.key, s]));
+
+      // 1. Macro -> Sectors
+      Object.entries(ioMap).forEach(([causeName, targets]) => {
+        Object.entries(targets).forEach(([secKey, ratio]) => {
+          const secData = sectorMap[secKey];
+          if (!secData || ratio < FLOW_THRESHOLD) return;
+
+          const targetIndex = idx(secData.name);
+          sourceIndices.push(idx(causeName));
+          targetIndices.push(targetIndex);
+          
+          const width = Math.abs(secData.contrib) * ratio * 3;
+          values.push(width);
+          
+          linkColors.push(colors.linkNeu);
+          hoverTexts.push(`<b>${causeName}</b><br>→<br><b>${secData.name}</b><br>Impact Weight: ${Math.round(ratio * 100)}%`);
+        });
+      });
+
+      // 2. Sectors -> Headline
+      let totalVisualWidth = 0;
+      dSectors.forEach(s => {
+        const sourceIndex = idx(s.name);
+        sourceIndices.push(sourceIndex);
+        targetIndices.push(idx('Headline CPI'));
+        
+        const width = Math.abs(s.contrib) * 3;
+        values.push(width);
+        totalVisualWidth += width;
+
+        const isPositive = s.contrib > 0;
+        linkColors.push(isPositive ? colors.linkPos : colors.linkNeg);
+        hoverTexts.push(
+          `<b>${s.name}</b><br>` +
+          `Weight: ${round2(s.weight)}%<br>` +
+          `Price Change: ${formatPct(s.change)}<br>` +
+          `<b>CPI Contribution: ${formatPct(s.contrib)}</b>`
+        );
+      });
+
+      // 3. Headline -> Impact
+      const consNodes = [
+        { key: 'GDP', label: `GDP Growth`, mag: Math.abs(m.gdp), value: formatPct(m.gdp) },
+        { key: 'UNEMP', label: `Unemployment`, mag: Math.abs(m.unemp), value: round2(m.unemp) + '%' },
+        { key: 'WAGE', label: `Real Wage Loss`, mag: Math.abs(m.realWageLoss), value: formatPct(m.realWageLoss) }
+      ];
+
+      const totalMacroMag = consNodes.reduce((sum, n) => sum + n.mag, 0) || 1;
+
+      consNodes.forEach(node => {
+        sourceIndices.push(idx('Headline CPI'));
+        targetIndices.push(idx(node.label));
+        
+        const width = (node.mag / totalMacroMag) * totalVisualWidth;
+        values.push(width);
+        linkColors.push(colors.linkNeu);
+        hoverTexts.push(`<b>Economic Impact</b><br>${node.label}: ${node.value}`);
+      });
+
+      const annotations = [
+        { text: 'Macro Drivers', x: 0.05, y: 1.08, showarrow: false, font: { size: 18, color: '#546e7a', family: 'Inter', weight: 700 }, xanchor: 'center' },
+        { text: 'CPI Sectors', x: 0.35, y: 1.08, showarrow: false, font: { size: 18, color: '#546e7a', family: 'Inter', weight: 700 }, xanchor: 'center' },
+        { text: 'Headline CPI', x: 0.65, y: 1.08, showarrow: false, font: { size: 18, color: '#546e7a', family: 'Inter', weight: 700 }, xanchor: 'center' },
+        { text: 'Economic Impact', x: 0.95, y: 1.08, showarrow: false, font: { size: 18, color: '#546e7a', family: 'Inter', weight: 700 }, xanchor: 'center' }
+      ];
+
+      const data = [{
+        type: "sankey",
+        orientation: "h",
+        arrangement: "snap",
+        node: {
+          pad: 15,
+          thickness: 80,
+          line: { color: "white", width: 3 },
+          label: allLabels,
+          color: nodeColors,
+          hovertemplate: '<b>%{label}</b><extra></extra>',
+          align: "center",
+        },
+        link: {
+          source: sourceIndices,
+          target: targetIndices,
+          value: values,
+          color: linkColors,
+          customdata: hoverTexts,
+          hovertemplate: '%{customdata}<extra></extra>',
+          hoverlabel: {
+            bgcolor: "white",
+            bordercolor: "#ccc",
+            font: { family: "Inter", size: 13, color: "#2c3e50" }
+          }
+        }
+      }];
+
+      const layout = {
+        font: { size: 14, family: "Inter", color: "#2c3e50", weight: 600 },
+        margin: { l: 30, r: 30, t: 80, b: 20 },
+        height: 700,
+        paper_bgcolor: "rgba(0,0,0,0)",
+        plot_bgcolor: "rgba(0,0,0,0)",
+        annotations: annotations
+      };
+
+      const config = { displayModeBar: false, responsive: true };
+
+      Plotly.react('chart', data, layout, config);
+    }
+
+    function updateTable(year) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = "";
+      
+      const d21 = sectorsData["2021"];
+      const d22 = sectorsData["2022"];
+
+      d21.forEach(s21 => {
+        const s22 = d22.find(x => x.key === s21.key);
+        const delta = s22.change - s21.change;
+        
+        const trendClass = (val) => val > 0 ? 'trend-up' : (val < 0 ? 'trend-down' : 'neutral');
+        const deltaClass = (val) => Math.abs(val) > 0.0001 ? (val > 0 ? 'trend-up' : 'trend-down') : 'neutral';
+
+        const val21 = formatPct(s21.change);
+        const val22 = formatPct(s22.change);
+
+        const row = `
+          <tr>
+            <td style="font-weight:600; color:#2c3e50">${s21.name}</td>
+            <td class="center num">${round2(s21.weight)}%</td>
+            <td class="center num"><span class="${trendClass(s21.change)}">${val21}</span></td>
+            <td class="center num">${round2(s22.weight)}%</td>
+            <td class="center num"><span class="${trendClass(s22.change)}">${val22}</span></td>
+            <td class="center num delta-col"><span class="${deltaClass(delta)}">${formatPct(delta)}</span></td>
+          </tr>
+        `;
+        tbody.innerHTML += row;
+      });
+      
+      const deltaTotal = totals["2022"] - totals["2021"];
+      const totalRow = `
+        <tr class="total-row">
+          <td>HEADLINE CPI</td>
+          <td class="center num">—</td>
+          <td class="center num"><span class="trend-up">${formatPct(totals["2021"])}</span></td>
+          <td class="center num">—</td>
+          <td class="center num"><span class="${deltaTotal>0 ? 'trend-up' : (deltaTotal<0 ? 'trend-down' : 'neutral')}">${formatPct(totals["2022"])}</span></td>
+          <td class="center num delta-col"><span class="${deltaTotal>0 ? 'trend-up' : (deltaTotal<0 ? 'trend-down' : 'neutral')}">${formatPct(deltaTotal)}</span></td>
+        </tr>
+      `;
+      tbody.innerHTML += totalRow;
+    }
+
+    function switchYear(year) {
+      document.querySelectorAll('.year-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.year === year);
+      });
+
+      updateSummaryCards(year);
+      drawChart(year);
+      updateTable(year);
+    }
+
+    document.querySelectorAll('.year-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        switchYear(btn.dataset.year);
+      });
+    });
+
+    switchYear('2022');
+  </script>
+</body>
+</html>
