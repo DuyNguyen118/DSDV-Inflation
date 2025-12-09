@@ -62,6 +62,17 @@
             </div>
             <div id="tooltip" class="tooltip"></div>
         </section>
+
+        <!-- Heatmap Section -->
+        <section class="chart-section">
+            <h3>Consumer Price Index (CPI) Heatmap</h3>
+            <p class="subtitle">Year-on-Year Comparison (Base: Previous Year = 100)</p>
+            
+            <div id="chart-container">
+                <svg id="heatmap"></svg>
+                <div id="heatmap-tooltip" class="tooltip"></div>
+            </div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -92,5 +103,6 @@
     <script src="https://unpkg.com/topojson@3"></script>
     <script src="Map-script.js" defer></script>
     <script src="Line-script.js" defer></script>
+    <script src="heatmap-script.js" defer></script>
 </body>
 </html>

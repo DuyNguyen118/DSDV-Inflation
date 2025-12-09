@@ -13,7 +13,7 @@ const svg = d3.select("#heatmap")
 const tooltip = d3.select("#tooltip");
 
 // --- Load CSV data ---
-d3.csv("CPI_average_year.csv").then(data => {
+d3.csv("data/CPI_average_year.csv").then(data => {
 
     // --- Convert wide → long format ---
     const years = data.columns.slice(1);       // Year columns
