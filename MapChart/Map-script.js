@@ -30,12 +30,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Helper function to find country data by matching name variations
     function findCountryData(countryName) {
         if (!countryName) return null;
-        
+
         // Direct lookup
         if (globalInflationData[countryName]) {
             return globalInflationData[countryName];
         }
-        
+
         // Check country name mapping
         const countryNameMap = {
             "United States of America": "United States",
@@ -66,23 +66,23 @@ document.addEventListener('DOMContentLoaded', function () {
             "Gambia": "Gambia, The",
             "The Gambia": "Gambia, The"
         };
-        
+
         const mappedName = countryNameMap[countryName];
         if (mappedName && globalInflationData[mappedName]) {
             return globalInflationData[mappedName];
         }
-        
+
         // Fuzzy matching by normalized name
         const normalizedSearch = normalizeCountryName(countryName);
         const dataKeys = Object.keys(globalInflationData);
-        
+
         // Try exact normalized match
         for (const key of dataKeys) {
             if (normalizeCountryName(key) === normalizedSearch) {
                 return globalInflationData[key];
             }
         }
-        
+
         // Try partial match
         for (const key of dataKeys) {
             const normalizedKey = normalizeCountryName(key);
@@ -90,25 +90,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 return globalInflationData[key];
             }
         }
-        
+
         return null;
     }
 
     // Load global inflation data
     d3.csv("data/global_inflation_data.csv")
-        .then(function(csvData) {
+        .then(function (csvData) {
             // Parse all country data
             csvData.forEach(row => {
                 const countryName = row.country_name ? row.country_name.trim() : '';
-                
+
                 if (!countryName) return;
-                
+
                 globalInflationData[countryName] = {};
-                
+
                 // Get all year columns (1980-2024)
                 Object.keys(row).forEach(key => {
                     if (key === 'country_name' || key === 'indicator_name') return;
-                    
+
                     const year = key.trim();
                     const value = row[key] ? row[key].trim() : '';
                     if (value && value !== '' && !isNaN(parseFloat(value))) {
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             console.log(`Loaded inflation data for ${Object.keys(globalInflationData).length} countries`);
-            
+
             // Load world map and create visualization
             loadWorldMap();
         })
@@ -126,28 +126,28 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("Global Inflation CSV Load Error:", err);
             // Fallback: try text loading method
             d3.text("data/global_inflation_data.csv")
-                .then(function(csvText) {
+                .then(function (csvText) {
                     const lines = csvText.split('\n').filter(line => line.trim() !== '');
-                    
+
                     // Handle BOM if present
                     if (lines[0].charCodeAt(0) === 0xFEFF) {
                         lines[0] = lines[0].substring(1);
                     }
 
                     const headers = lines[0].split(',');
-                    
+
                     // Parse all country data
                     for (let i = 1; i < lines.length; i++) {
                         const values = lines[i].split(',');
                         const countryName = values[0] ? values[0].trim().replace(/"/g, '') : '';
-                        
+
                         if (!countryName) continue;
-                        
+
                         globalInflationData[countryName] = {};
                         headers.forEach((header, index) => {
                             if (index === 0) return; // Skip country_name
                             if (index === 1) return; // Skip indicator_name
-                            
+
                             const year = header.trim();
                             const value = values[index] ? values[index].trim() : '';
                             if (value && value !== '' && !isNaN(parseFloat(value))) {
@@ -163,19 +163,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Load world map from TopoJSON
     function loadWorldMap() {
         d3.json("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json")
-            .then(function(world) {
+            .then(function (world) {
                 worldMap = world;
                 createGlobalMap();
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.error("Error loading world map:", error);
                 // Fallback: try alternative source
                 d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson")
-                    .then(function(world) {
+                    .then(function (world) {
                         worldMap = world;
                         createGlobalMapGeoJSON();
                     })
-                    .catch(function(err) {
+                    .catch(function (err) {
                         console.error("Error loading alternative map:", err);
                     });
             });
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         countries.features.forEach(d => {
             const countryName = d.properties.NAME || d.properties.name;
             const countryData = findCountryData(countryName);
-            
+
             if (countryData) {
                 const value = countryData[selectedMapYear.toString()];
                 if (value !== undefined && value !== null && !isNaN(value)) {
@@ -223,11 +223,11 @@ document.addEventListener('DOMContentLoaded', function () {
         // Create color scale
         const minInflation = d3.min(inflationValues) || 0;
         const maxInflation = d3.max(inflationValues) || 10;
-        
+
         // Create a color scale that handles negative, low, moderate, and high inflation
         const colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
             .domain([maxInflation, Math.min(minInflation, -5)]); // Reverse so red = high, green = low/negative
-        
+
         // Alternative: Use a custom color scale for better visualization
         const customColorScale = d3.scaleThreshold()
             .domain([-5, 0, 2, 5, 10, 20, 50])
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("fill", d => {
                 const countryName = d.properties.NAME || d.properties.name;
                 const countryData = findCountryData(countryName);
-                
+
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
                     if (value !== undefined && value !== null && !isNaN(value)) {
@@ -252,14 +252,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 return "#bdbabaff"; // No data
             })
-            .on("mouseover", function(event, d) {
+            .on("mouseover", function (event, d) {
                 d3.select(this)
                     .attr("stroke", "#333")
                     .attr("stroke-width", 2);
 
                 const countryName = d.properties.NAME || d.properties.name;
                 const countryData = findCountryData(countryName);
-                
+
                 let inflationRate = "No data";
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const tooltip = d3.select("body")
                     .append("div")
-                    .attr("class", "tooltip")
+                    .attr("class", "map-tooltip")
                     .style("opacity", 0);
 
                 tooltip.transition()
@@ -282,15 +282,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p>Year: ${selectedMapYear}</p>
                     <p>Inflation Rate: ${inflationRate}</p>
                 `)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 d3.select(this)
                     .attr("stroke", "#fff")
                     .attr("stroke-width", 0.5);
 
-                d3.selectAll(".tooltip").remove();
+                d3.selectAll(".map-tooltip").remove();
             });
 
         // Create legend
@@ -325,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
         countries.forEach(d => {
             const countryName = d.properties.name || d.properties.NAME;
             const countryData = findCountryData(countryName);
-            
+
             if (countryData) {
                 const value = countryData[selectedMapYear.toString()];
                 if (value !== undefined && value !== null && !isNaN(value)) {
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .attr("fill", d => {
                 const countryName = d.properties.name || d.properties.NAME;
                 const countryData = findCountryData(countryName);
-                
+
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
                     if (value !== undefined && value !== null && !isNaN(value)) {
@@ -359,12 +359,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
                 return "#e0e0e0";
             })
-            .on("mouseover", function(event, d) {
+            .on("mouseover", function (event, d) {
                 d3.select(this).attr("stroke", "#333").attr("stroke-width", 2);
-                
+
                 const countryName = d.properties.name || d.properties.NAME;
                 const countryData = findCountryData(countryName);
-                
+
                 let inflationRate = "No data";
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const tooltip = d3.select("body")
                     .append("div")
-                    .attr("class", "tooltip")
+                    .attr("class", "map-tooltip")
                     .style("opacity", 0);
 
                 tooltip.transition().duration(200).style("opacity", .9);
@@ -385,12 +385,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     <p>Year: ${selectedMapYear}</p>
                     <p>Inflation Rate: ${inflationRate}</p>
                 `)
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 28) + "px");
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
             })
-            .on("mouseout", function() {
+            .on("mouseout", function () {
                 d3.select(this).attr("stroke", "#fff").attr("stroke-width", 0.5);
-                d3.selectAll(".tooltip").remove();
+                d3.selectAll(".map-tooltip").remove();
             });
 
         createMapLegend(customColorScale);
@@ -439,11 +439,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 .style("height", "15px")
                 .style("border", "1px solid #999");
 
-            const label = i === 0 
+            const label = i === 0
                 ? `< ${item.max}%`
                 : i === legendItems.length - 1
-                ? `> ${item.min}%`
-                : `${item.min}% - ${item.max}%`;
+                    ? `> ${item.min}%`
+                    : `${item.min}% - ${item.max}%`;
 
             itemDiv.append("span")
                 .style("font-size", "12px")
@@ -455,12 +455,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // Set up map year slider
     const mapYearSlider = document.getElementById('map-year-slider');
     const mapYearDisplay = document.getElementById('selected-map-year');
-    
+
     if (mapYearSlider && mapYearDisplay) {
-        mapYearSlider.addEventListener('input', function() {
+        mapYearSlider.addEventListener('input', function () {
             selectedMapYear = parseInt(this.value);
             mapYearDisplay.textContent = selectedMapYear;
-            
+
             // Recreate map with new year data
             if (worldMap) {
                 if (worldMap.objects) {

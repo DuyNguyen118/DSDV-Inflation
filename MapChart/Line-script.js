@@ -1,61 +1,61 @@
 // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // ---- 1. Load Vietnam data from WDI CSVs ----
-    console.log("Loading data...");
-    Promise.all([
-        d3.csv("data/inflation-consumer-price.csv"),
-        d3.csv("data/gdp-growth-rate.csv"),
-    ]).then(([inflRaw, gdpRaw]) => {
-        console.log("Data loaded, processing...");
-  const inflRow = inflRaw.find(
-    (d) =>
-      d["Country Code"] === "VNM" &&
-      d["Indicator Code"] === "FP.CPI.TOTL.ZG"
-  );
-  const gdpRow = gdpRaw.find(
-    (d) =>
-      d["Country Code"] === "VNM" &&
-      d["Indicator Code"] === "NY.GDP.MKTP.KD.ZG"
-  );
+document.addEventListener('DOMContentLoaded', function () {
+  // ---- 1. Load Vietnam data from WDI CSVs ----
+  console.log("Loading data...");
+  Promise.all([
+    d3.csv("data/inflation-consumer-price.csv"),
+    d3.csv("data/gdp-growth-rate.csv"),
+  ]).then(([inflRaw, gdpRaw]) => {
+    console.log("Data loaded, processing...");
+    const inflRow = inflRaw.find(
+      (d) =>
+        d["Country Code"] === "VNM" &&
+        d["Indicator Code"] === "FP.CPI.TOTL.ZG"
+    );
+    const gdpRow = gdpRaw.find(
+      (d) =>
+        d["Country Code"] === "VNM" &&
+        d["Indicator Code"] === "NY.GDP.MKTP.KD.ZG"
+    );
 
-  if (!inflRow || !gdpRow) {
-    console.error("Could not find Vietnam rows in CSV files.");
-    return;
-  }
+    if (!inflRow || !gdpRow) {
+      console.error("Could not find Vietnam rows in CSV files.");
+      return;
+    }
 
-  const yearKeys = Object.keys(inflRow).filter((k) => /^\d{4}$/.test(k));
-  const years = yearKeys.map((y) => +y);
+    const yearKeys = Object.keys(inflRow).filter((k) => /^\d{4}$/.test(k));
+    const years = yearKeys.map((y) => +y);
 
-  const data = years
-    .map((year) => {
-      const inflVal = parseFloat(inflRow[year]);
-      const gdpVal = parseFloat(gdpRow[year]);
-      if (isNaN(inflVal) || isNaN(gdpVal)) return null;
-      return { year, inflation: inflVal, gdp: gdpVal };
-    })
-    .filter((d) => d !== null);
+    const data = years
+      .map((year) => {
+        const inflVal = parseFloat(inflRow[year]);
+        const gdpVal = parseFloat(gdpRow[year]);
+        if (isNaN(inflVal) || isNaN(gdpVal)) return null;
+        return { year, inflation: inflVal, gdp: gdpVal };
+      })
+      .filter((d) => d !== null);
 
-        drawChart(data);
-    }).catch(error => {
-        console.error("Error loading CSV data:", error);
-    });
+    drawChart(data);
+  }).catch(error => {
+    console.error("Error loading CSV data:", error);
+  });
 });
 
 // ---- 2. Chart with hover + dynamic annotations ----
 function drawChart(data) {
   const container = d3.select("#vietnam-chart-container");
   container.select("svg").remove(); // Clear any existing chart
-  
+
   const width = 700;
   const height = 400;
-  
+
   const svg = container.append("svg")
-      .attr("id", "vietnam-chart")
-      .attr("width", "100%")
-      .attr("height", "100%")
-      .attr("viewBox", `0 0 ${width} ${height}`)
-      .attr("preserveAspectRatio", "xMidYMid meet");
-      
+    .attr("id", "vietnam-chart")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("preserveAspectRatio", "xMidYMid meet");
+
   console.log("SVG container created");
 
   const margin = { top: 32, right: 64, bottom: 40, left: 56 };
@@ -66,7 +66,7 @@ function drawChart(data) {
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  const tooltip = d3.select("#tooltip");
+  const tooltip = d3.select("#line-tooltip");
   const axisToggleInput = document.getElementById("axis-toggle-input");
   const axisToggleText = document.getElementById("axis-toggle-text");
 
@@ -343,7 +343,7 @@ function drawChart(data) {
     }
   }
 
-  axisToggleInput.addEventListener("change", function() {
+  axisToggleInput.addEventListener("change", function () {
     axisMode = this.checked ? "single" : "dual";
     axisToggleText.textContent = this.checked ? "Single axis" : "Dual axis";
     updateYDomains();

@@ -1,5 +1,5 @@
 // --- Layout settings ---
-const margin = {top: 50, right: 50, bottom: 100, left: 220};
+const margin = { top: 50, right: 50, bottom: 100, left: 220 };
 const width = 900 - margin.left - margin.right;
 const height = 600 - margin.top - margin.bottom;
 
@@ -7,10 +7,10 @@ const height = 600 - margin.top - margin.bottom;
 const svg = d3.select("#heatmap")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-const tooltip = d3.select("#tooltip");
+const tooltip = d3.select("#heatmap-tooltip");
 
 // --- Load CSV data ---
 d3.csv("data/CPI_average_year.csv").then(data => {
@@ -66,11 +66,11 @@ d3.csv("data/CPI_average_year.csv").then(data => {
         .style("fill", d => myColor(d.value))
         .style("rx", 4)
         .style("ry", 4)
-        .on("mouseover", function() {
+        .on("mouseover", function () {
             tooltip.style("opacity", 1);
             d3.select(this).style("stroke", "black").style("stroke-width", 2);
         })
-        .on("mousemove", function(event, d) {
+        .on("mousemove", function (event, d) {
             tooltip.html(`
                 <b>${d.group}</b><br>
                 Year: ${d.year}<br>
@@ -79,10 +79,10 @@ d3.csv("data/CPI_average_year.csv").then(data => {
                     ${d.value > 100 ? "Inflation" : "Deflation"}
                 </span>
             `)
-            .style("left", (event.pageX + 15) + "px")
-            .style("top", (event.pageY - 28) + "px");
+                .style("left", (event.pageX + 15) + "px")
+                .style("top", (event.pageY - 28) + "px");
         })
-        .on("mouseleave", function() {
+        .on("mouseleave", function () {
             tooltip.style("opacity", 0);
             d3.select(this).style("stroke", "none");
         });
