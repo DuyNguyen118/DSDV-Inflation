@@ -92,10 +92,11 @@
 /* Vietnam Chart Styles */
 #vietnam-chart-container {
     position: relative;
-    width: 100%;
-    max-width: 1000px;
+    width: 90%;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding: 10px 0;
+    height: 400px; /* Fixed height for better control */
 }
 
 .chart-actions {
