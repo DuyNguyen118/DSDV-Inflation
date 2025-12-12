@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vietnam CPI Inflation Analysis</title>
+
+  <!-- Plotly and PapaParse (CDN) -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+
+  <style>
+    :root{
+      --cause-node: #e0f7fa;
+      --sector-node: #fff3e0;
+      --total-node: #e8f5e9;
+      --cons-node: #f3e5f5;
+      --flow-pos-rgb: 46,125,50;
+      --flow-neg-rgb: 211,47,47;
+      --flow-neu-rgb: 120,144,156;
+      --text-secondary: #7a8a91;
+      --bg: #ffffff;
+      --card-bg: #fbfcfd;
+    }
+
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;}
+    body{background:var(--bg);color:#2c3e50;padding:18px;box-sizing:border-box}
+
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    .title{font-size:20px;font-weight:700}
+    .year-switch{display:flex;gap:8px}
+    .year-btn{padding:8px 12px;border-radius:6px;border:1px solid #e0e6ea;background:#fff;cursor:pointer;font-weight:600}
+    .year-btn.active{background:#2c7be5;color:#fff;border-color:#2c7be5}
+
+    .layout{display:grid;grid-template-columns:360px 1fr;gap:18px}
+    .left{display:flex;flex-direction:column;gap:12px}
+    .summary-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .summary-card{background:var(--card-bg);padding:12px;border-radius:8px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+    .summary-label{font-size:12px;color:var(--text-secondary);margin-bottom:6px}
+    .summary-value{font-size:16px;font-weight:700}
+
+    .table-wrap{background:var(--card-bg);padding:12px;border-radius:8px;overflow:auto}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;text-align:left;border-bottom:1px solid rgba(0,0,0,0.04)}
+    .center{text-align:center}
+    .num{font-variant-numeric:tabular-nums}
+    .trend-up{color:#2e7d32}
+    .trend-down{color:#c62828}
+    .neutral{color:#546e7a}
+    .total-row{font-weight:700;background:rgba(0,0,0,0.02)}
+
+    #chart{width:100%;height:700px;background:transparent;border-radius:8px}
+    .footer-note{font-size:12px;color:var(--text-secondary);margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">Vietnam CPI Inflation Analysis</div>
+    <div class="year-switch" role="tablist" aria-label="Year switch">
+      <button class="year-btn" data-year="2021">2021</button>
+      <button class="year-btn active" data-year="2022">2022</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="left">
+      <div id="summaryCards" class="summary-cards" aria-live="polite">
+        <!-- Summary cards injected by script -->
+      </div>
+
+      <div class="table-wrap" aria-hidden="false">
+        <table aria-label="Sector table">
+          <thead>
+            <tr>
+              <th>Sector</th>
+              <th class="center">Weight</th>
+              <th class="center">2021 Change</th>
+              <th class="center">2022 Weight</th>
+              <th class="center">2022 Change</th>
+              <th class="center">Delta</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- Table rows injected by script -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer-note">Data source: local <code>data.csv</code>. Use the year buttons to switch view.</div>
+    </div>
+
+    <div class="right">
+      <div id="chart" role="img" aria-label="Sankey chart"></div>
+    </div>
+  </div>
+
+  <!-- Your script.js should be in the same folder -->
+  <script src="script.js"></script>
+</body>
+</html>
