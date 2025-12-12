@@ -1,0 +1,502 @@
+/* Vietnam CPI Inflation Analysis - Stylesheet */
+
+/* Removed global :root, *, body styles to avoid conflict */
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+/* Header Styles */
+.header {
+  background: linear-gradient(135deg, var(--cause-node) 0%, var(--sector-node) 100%);
+  color: white;
+  padding: 32px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-left h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.header-left p {
+  font-size: 15px;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+/* Year Toggle */
+.year-toggle {
+  display: flex;
+  gap: 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  padding: 4px;
+  backdrop-filter: blur(10px);
+}
+
+.year-btn {
+  padding: 12px 32px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.year-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.year-btn.active {
+  background: white;
+  color: var(--cause-node);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Summary Cards */
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  padding: 30px 40px;
+  background: #fafbfc;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  border-left: 4px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.summary-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.summary-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summary-value .icon-up {
+  color: var(--text-pos);
+  font-weight: 900;
+}
+
+.summary-value .icon-down {
+  color: var(--text-neg);
+  font-weight: 900;
+}
+
+.summary-value.positive {
+  color: var(--text-pos);
+}
+
+.summary-value.negative {
+  color: var(--text-neg);
+}
+
+.summary-value.neutral {
+  color: var(--text-main);
+}
+
+/* Main Content */
+.main-content {
+  padding: 40px;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+  padding: 16px 20px;
+  background: #fafbfc;
+  border-radius: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-color);
+  margin: 0 8px;
+}
+
+/* Chart Container */
+#chart {
+  width: 100%;
+  height: 700px;
+  margin-bottom: 40px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* Table Section */
+.table-section {
+  margin-top: 40px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  background: white;
+}
+
+th {
+  background: linear-gradient(to bottom, #f8f9fa, #f1f3f5);
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 16px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+}
+
+td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text-main);
+}
+
+tbody tr:hover {
+  background-color: #fafbfc;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.center {
+  text-align: center;
+}
+
+/* Trend Indicators */
+.trend-up {
+  color: var(--text-pos);
+  font-weight: 600;
+  background: var(--bg-pos);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.trend-down {
+  color: var(--text-neg);
+  font-weight: 600;
+  background: var(--bg-neg);
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.neutral {
+  color: var(--text-main);
+  font-weight: 600;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  display: inline-block;
+}
+
+/* Table Special Styles */
+.delta-col {
+  background-color: #fafbfc;
+}
+
+.total-row {
+  background: linear-gradient(to right, #f8f9fa, #ffffff) !important;
+  font-weight: 600;
+  border-top: 2px solid var(--primary) !important;
+  border-bottom: 2px solid var(--primary) !important;
+}
+
+/* Note Section */
+.note {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fafbfc;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  border-left: 3px solid var(--primary);
+}
+
+.note strong {
+  color: var(--text-main);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  #chart {
+    height: 600px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .legend {
+    justify-content: center;
+  }
+
+  .table-container {
+    overflow-x: scroll;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-left h1 {
+    font-size: 24px;
+  }
+
+  .header-left p {
+    font-size: 13px;
+  }
+
+  .year-btn {
+    padding: 10px 24px;
+    font-size: 16px;
+  }
+
+  #chart {
+    height: 500px;
+  }
+}
+
+/* Moved from index.html */
+:root {
+  --cause-node: #e0f7fa;
+  --sector-node: #fff3e0;
+  --total-node: #e8f5e9;
+  --cons-node: #f3e5f5;
+  --flow-pos-rgb: 46, 125, 50;
+  --flow-neg-rgb: 211, 47, 47;
+  --flow-neu-rgb: 120, 144, 156;
+  --text-secondary: #7a8a91;
+  --bg: #ffffff;
+  --card-bg: #fbfcfd;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+}
+
+body {
+  background: var(--bg);
+  color: #2c3e50;
+  padding: 18px;
+  box-sizing: border-box
+}
+
+.sankey-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px
+}
+
+.sankey-title {
+  font-size: 20px;
+  font-weight: 700
+}
+
+.sankey-year-switch {
+  display: flex;
+  gap: 8px
+}
+
+.sankey-year-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e6ea;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600
+}
+
+.sankey-year-btn.active {
+  background: #2c7be5;
+  color: #fff;
+  border-color: #2c7be5
+}
+
+.sankey-layout {
+  display: block;
+}
+
+.sankey-left {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin: 20px auto;
+  max-width: 1000px;
+  width: 100%;
+}
+
+.sankey-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px
+}
+
+.sankey-summary-card {
+  background: var(--card-bg);
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04)
+}
+
+.sankey-summary-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 4px
+}
+
+.sankey-summary-value {
+  font-size: 14px;
+  font-weight: 700
+}
+
+.sankey-table-wrap {
+  background: var(--card-bg);
+  padding: 8px;
+  border-radius: 8px;
+  overflow: auto
+}
+
+.sankey-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px
+}
+
+.sankey-table-wrap th,
+.sankey-table-wrap td {
+  padding: 4px 6px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04)
+}
+
+.sankey-center {
+  text-align: center
+}
+
+.sankey-num {
+  font-variant-numeric: tabular-nums
+}
+
+.sankey-trend-up {
+  color: #2e7d32
+}
+
+.sankey-trend-down {
+  color: #c62828
+}
+
+.sankey-neutral {
+  color: #546e7a
+}
+
+.sankey-total-row {
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.02)
+}
+
+#sankey-chart {
+  width: 100%;
+  height: 500px;
+  background: transparent;
+  border-radius: 8px
+}
+
+.sankey-footer-note {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 8px
+}

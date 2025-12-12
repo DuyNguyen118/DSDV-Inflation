@@ -1,0 +1,13 @@
+cause,sector_key,ratio
+Global Energy Prices,fuel,1.0
+Global Energy Prices,trans,0.15
+Global Energy Prices,house,0.05
+Global Energy Prices,food,0.08
+Global Energy Prices,edu,0.02
+Global Inflation,food,0.6
+Global Inflation,house,0.08
+Global Inflation,edu,0.05
+Credit Policy,house,0.15
+Credit Policy,trans,0.05
+Public Service Adj.,edu,0.9
+Public Service Adj.,house,0.02
