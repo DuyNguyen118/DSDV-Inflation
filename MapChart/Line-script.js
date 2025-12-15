@@ -43,95 +43,95 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ---- 2. Chart with hover + dynamic annotations ----
 function drawChart(data) {
-  const container = d3.select("#vietnam-chart-container");
-  container.select("svg").remove(); // Clear any existing chart
+  const container = window.d3.select("#vietnam-chart-container")
+  container.select("svg").remove() // Clear any existing chart
 
-  const width = 700;
-  const height = 400;
+  const width = 700
+  const height = 400
 
-  const svg = container.append("svg")
+  const svg = container
+    .append("svg")
     .attr("id", "vietnam-chart")
     .attr("width", "100%")
     .attr("height", "100%")
     .attr("viewBox", `0 0 ${width} ${height}`)
-    .attr("preserveAspectRatio", "xMidYMid meet");
+    .attr("preserveAspectRatio", "xMidYMid meet")
 
-  console.log("SVG container created");
+  const margin = { top: 32, right: 64, bottom: 40, left: 56 }
+  const innerWidth = width - margin.left - margin.right
+  const innerHeight = height - margin.top - margin.bottom
 
-  const margin = { top: 32, right: 64, bottom: 40, left: 56 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`)
 
-  const g = svg
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+  svg
+    .append("defs")
+    .append("clipPath")
+    .attr("id", "chart-clip")
+    .append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", innerWidth)
+    .attr("height", innerHeight)
 
-  const tooltip = d3.select("#line-tooltip");
-  const axisToggleInput = document.getElementById("axis-toggle-input");
-  const axisToggleText = document.getElementById("axis-toggle-text");
+  const tooltip = window.d3.select("#line-tooltip")
+    .style("background-color", "rgba(31, 41, 55, 0.95)") // Dark bg
+    .style("color", "#ffffff") // White text
+    .style("padding", "8px")
+    .style("border-radius", "4px")
+    .style("border", "1px solid #4b5563") // Gray border
+    .style("font-size", "12px");
 
-  let axisMode = "dual"; // 'dual' or 'single'
+  const axisToggleInput = document.getElementById("axis-toggle-input")
+  const axisToggleText = document.getElementById("axis-toggle-text")
+
+  let axisMode = "dual" // 'dual' or 'single'
 
   // Sync the checkbox with the initial mode
-  axisToggleInput.checked = false;  // false for dual axis
-  axisToggleText.textContent = "Dual axis";
+  axisToggleInput.checked = false // false for dual axis
+  axisToggleText.textContent = "Dual axis"
 
-  const x = d3
+  const x = window.d3
     .scaleLinear()
-    .domain(d3.extent(data, (d) => d.year))
-    .range([0, innerWidth]);
+    .domain(window.d3.extent(data, (d) => d.year))
+    .range([0, innerWidth])
 
-  const yInflation = d3.scaleLinear().range([innerHeight, 0]);
-  const yGDP = d3.scaleLinear().range([innerHeight, 0]);
+  const yInflation = window.d3.scaleLinear().range([innerHeight, 0])
+  const yGDP = window.d3.scaleLinear().range([innerHeight, 0])
 
-  updateYDomains();
+  updateYDomains()
 
-  const originalXDomain = x.domain().slice();
+  const originalXDomain = x.domain().slice()
 
-  const xAxis = d3
-    .axisBottom(x)
-    .tickFormat(d3.format("d"))
-    .ticks(10);
+  const xAxis = window.d3.axisBottom(x).tickFormat(window.d3.format("d")).ticks(10)
 
-  const yAxisLeft = d3.axisLeft(yInflation).ticks(6);
-  const yAxisRight = d3.axisRight(yGDP).ticks(6);
+  const yAxisLeft = window.d3.axisLeft(yInflation).ticks(6)
+  const yAxisRight = window.d3.axisRight(yGDP).ticks(6)
 
   const xAxisG = g
     .append("g")
     .attr("transform", `translate(0,${innerHeight})`)
     .attr("class", "x-axis")
     .call(xAxis)
-    .call((g) =>
-      g.selectAll("text").style("fill", "#FFFFFF").style("font-size", "11px")
-    )
+    .call((g) => g.selectAll("text").style("fill", "#FFFFFF").style("font-size", "11px"))
     .call((g) => g.selectAll("line").style("stroke", "#e5e7eb"))
-    .call((g) => g.select(".domain").style("stroke", "#9ca3af"));
+    .call((g) => g.select(".domain").style("stroke", "#9ca3af"))
 
   const yAxisLeftG = g
     .append("g")
     .attr("class", "y-axis-left")
     .call(yAxisLeft)
-    .call((g) =>
-      g.selectAll("text").style("fill", "#60a5fa").style("font-size", "11px")
-    )
-    .call((g) =>
-      g
-        .selectAll("line")
-        .style("stroke", "#e5e7eb")
-        .style("stroke-opacity", 1)
-    )
-    .call((g) => g.select(".domain").style("stroke", "#9ca3af"));
+    .call((g) => g.selectAll("text").style("fill", "#60a5fa").style("font-size", "11px"))
+    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 1))
+    .call((g) => g.select(".domain").style("stroke", "#9ca3af"))
 
   const yAxisRightG = g
     .append("g")
     .attr("class", "y-axis-right")
     .attr("transform", `translate(${innerWidth},0)`)
     .call(yAxisRight)
-    .call((g) =>
-      g.selectAll("text").style("fill", "#f97373").style("font-size", "11px")
-    )
+    .call((g) => g.selectAll("text").style("fill", "#f97373").style("font-size", "11px"))
     .call((g) => g.selectAll("line").remove())
-    .call((g) => g.select(".domain").style("stroke", "#4b5563"));
+    .call((g) => g.select(".domain").style("stroke", "#4b5563"))
 
   const yInflLabel = svg
     .append("text")
@@ -139,7 +139,7 @@ function drawChart(data) {
     .attr("y", margin.top - 10)
     .attr("fill", "#60a5fa")
     .attr("font-size", 11)
-    .text("Inflation (%)");
+    .text("Inflation (%)")
 
   const yGDPLabel = svg
     .append("text")
@@ -148,79 +148,69 @@ function drawChart(data) {
     .attr("fill", "#f97373")
     .attr("font-size", 11)
     .style("text-anchor", "end")
-    .text("GDP growth (%)");
+    .text("GDP growth (%)")
 
   const gridG = g
     .append("g")
     .attr("class", "grid")
-    .call(
-      d3
-        .axisLeft(yInflation)
-        .ticks(6)
-        .tickSize(-innerWidth)
-        .tickFormat("")
-    )
-    .call((g) =>
-      g
-        .selectAll("line")
-        .style("stroke", "#e5e7eb")
-        .style("stroke-opacity", 1)
-    )
-    .call((g) => g.select(".domain").remove());
+    .call(window.d3.axisLeft(yInflation).ticks(6).tickSize(-innerWidth).tickFormat(""))
+    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 1))
+    .call((g) => g.select(".domain").remove())
 
-  const lineInflation = d3
+  const clippedGroup = g.append("g").attr("clip-path", "url(#chart-clip)")
+
+  const lineInflation = window.d3
     .line()
     .x((d) => x(d.year))
     .y((d) => yInflation(d.inflation))
-    .curve(d3.curveMonotoneX);
+    .curve(d3.curveLinear)  // Changed from curveMonotoneX
 
-  const lineGDP_dual = d3
+  const lineGDP_dual = window.d3
     .line()
     .x((d) => x(d.year))
     .y((d) => yGDP(d.gdp))
-    .curve(d3.curveMonotoneX);
+    .curve(d3.curveLinear)  // Changed from curveMonotoneX
 
-  const lineGDP_single = d3
+  const lineGDP_single = window.d3
     .line()
     .x((d) => x(d.year))
     .y((d) => yInflation(d.gdp))
-    .curve(d3.curveMonotoneX);
+    .curve(d3.curveLinear)  // Changed from curveMonotoneX
 
-  const inflationPath = g
+  const inflationPath = clippedGroup
     .append("path")
     .datum(data)
     .attr("fill", "none")
     .attr("stroke", "#38bdf8")
     .attr("stroke-width", 2)
-    .attr("d", lineInflation);
+    .attr("d", lineInflation)
 
-  const gdpPath = g
+  const gdpPath = clippedGroup
     .append("path")
     .datum(data)
     .attr("fill", "none")
     .attr("stroke", "#fb7185")
     .attr("stroke-width", 2)
-    .attr("d", lineGDP_dual);
-
-  [inflationPath, gdpPath].forEach((path) => {
-    const length = path.node().getTotalLength();
+    .attr("d", lineGDP_dual)
+  ;[inflationPath, gdpPath].forEach((path) => {
+    const length = path.node().getTotalLength()
     path
       .attr("stroke-dasharray", `${length} ${length}`)
       .attr("stroke-dashoffset", length)
       .transition()
       .duration(1400)
-      .ease(d3.easeCubicOut)
-      .attr("stroke-dashoffset", 0);
-  });
+      .ease(window.d3.easeCubicOut)
+      .attr("stroke-dashoffset", 0)
+  })
 
-  // Hover group
-  const focusGroup = g.append("g");
+  const focusGroup = clippedGroup.append("g")
+
   const focusLine = focusGroup
     .append("line")
     .attr("stroke", "#d1d5db")
     .attr("stroke-width", 1)
     .attr("stroke-dasharray", "4 4")
-    .style("opacity", 0);
+    .style("opacity", 0)
 
   const focusInflationDot = focusGroup
     .append("circle")
@@ -228,7 +218,7 @@ function drawChart(data) {
     .attr("fill", "#38bdf8")
     .attr("stroke", "#ffffff")
     .attr("stroke-width", 1.5)
-    .style("opacity", 0);
+    .style("opacity", 0)
 
   const focusGDPDot = focusGroup
     .append("circle")
@@ -236,9 +226,9 @@ function drawChart(data) {
     .attr("fill", "#fb7185")
     .attr("stroke", "#ffffff")
     .attr("stroke-width", 1.5)
-    .style("opacity", 0);
+    .style("opacity", 0)
 
-  const hoverAnnotationGroup = g.append("g");
+  const hoverAnnotationGroup = g.append("g")
 
   const overlay = g
     .append("rect")
@@ -247,9 +237,9 @@ function drawChart(data) {
     .attr("fill", "transparent")
     .on("mousemove", handleMove)
     .on("mouseenter", handleEnter)
-    .on("mouseleave", handleLeave);
+    .on("mouseleave", handleLeave)
 
-  const bisectYear = d3.bisector((d) => d.year).center;
+  const bisectYear = window.d3.bisector((d) => d.year).center
 
   // Data-driven interesting events
   const eventNotes = {
@@ -259,60 +249,89 @@ function drawChart(data) {
     2011: "Post-crisis inflation flare-up amid solid growth",
     2020: "COVID‑19 shock; growth collapse, moderate inflation",
     2022: "Reopening + energy shock; strong growth, higher prices",
-  };
+  }
 
   function handleEnter() {
-    focusLine.style("opacity", 1);
-    focusInflationDot.style("opacity", 1);
-    focusGDPDot.style("opacity", 1);
-    tooltip.style("opacity", 1);
+    focusLine.style("opacity", 1)
+    focusInflationDot.style("opacity", 1)
+    focusGDPDot.style("opacity", 1)
+    tooltip.style("opacity", 1)
   }
 
   function handleLeave() {
-    focusLine.style("opacity", 0);
-    focusInflationDot.style("opacity", 0);
-    focusGDPDot.style("opacity", 0);
-    tooltip.style("opacity", 0);
-    hoverAnnotationGroup.selectAll("*").remove();
+    focusLine.style("opacity", 0)
+    focusInflationDot.style("opacity", 0)
+    focusGDPDot.style("opacity", 0)
+    tooltip.style("opacity", 0)
+    hoverAnnotationGroup.selectAll("*").remove()
   }
 
   function handleMove(event) {
-    const [xm] = d3.pointer(event);
-    const yearVal = x.invert(xm);
-    const idx = bisectYear(data, yearVal);
-    const d = data[idx];
+    const [xm] = window.d3.pointer(event)
+    const yearVal = x.invert(xm)
+    const idx = bisectYear(data, yearVal)
+    const d = data[idx]
 
-    const xPos = x(d.year);
-    const yInfl = yInflation(d.inflation);
-    const yGdp = axisMode === "dual" ? yGDP(d.gdp) : yInflation(d.gdp);
+    if (!d) return
 
-    focusLine
-      .attr("x1", xPos)
-      .attr("x2", xPos)
-      .attr("y1", 0)
-      .attr("y2", innerHeight);
-    focusInflationDot.attr("cx", xPos).attr("cy", yInfl);
-    focusGDPDot.attr("cx", xPos).attr("cy", yGdp);
+    const xPos = x(d.year)
+    const yInfl = yInflation(d.inflation)
+    const yGdp = axisMode === "dual" ? yGDP(d.gdp) : yInflation(d.gdp)
 
-    const [pageX, pageY] = d3.pointer(event, document.body);
+    focusLine.attr("x1", xPos).attr("x2", xPos).attr("y1", 0).attr("y2", innerHeight)
+    focusInflationDot.attr("cx", xPos).attr("cy", yInfl)
+    focusGDPDot.attr("cx", xPos).attr("cy", yGdp)
+
+    const [pageX, pageY] = window.d3.pointer(event, document.body)
     tooltip
-      .style("left", `${pageX}px`)
-      .style("top", `${pageY}px`)
+      .style("left", `${pageX + 15}px`)
+      .style("top", `${pageY - 28}px`)
       .html(
         `<strong>${d.year}</strong><br/>
          CPI inflation: ${d.inflation.toFixed(2)}%<br/>
-         GDP growth: ${d.gdp.toFixed(2)}%`
-      );
+         GDP growth: ${d.gdp.toFixed(2)}%`,
+      )
 
     // Dynamic annotation for interesting years
     hoverAnnotationGroup.selectAll("*").remove();
     const note = eventNotes[d.year];
     if (note) {
-      const boxWidth = 220;
-      const boxHeight = 40;
-      const boxX = Math.min(Math.max(xPos + 6, 0), innerWidth - boxWidth);
-      const boxY = 6;
-
+      const padding = 8;
+      const lineHeight = 16;
+      const maxWidth = 220; // Increased max width
+      const words = note.split(/\s+/);
+      let line = '';
+      const lines = [];
+      
+      // Simple word wrapping
+      for (const word of words) {
+        const testLine = line ? line + ' ' + word : word;
+        const testWidth = getTextWidth(testLine, '10px Arial');
+        if (testWidth <= maxWidth - (2 * padding) - 10) { // Added buffer for wrapping
+          line = testLine;
+        } else {
+          if (line) lines.push(line);
+          line = word;
+        }
+      }
+      if (line) lines.push(line);
+      
+      // Calculate max line width
+      let maxLineW = getTextWidth(`${d.year}:`, 'bold 11px Arial');
+      lines.forEach(l => {
+        maxLineW = Math.max(maxLineW, getTextWidth(l, '10px Arial'));
+      });
+      
+      const boxWidth = Math.min(maxWidth, Math.max(120, maxLineW + 2 * padding + 10)); // Added 10px buffer
+      const boxHeight = (lines.length + 1) * lineHeight + (2 * padding);
+      
+      // Calculate position (try to keep it within the chart bounds)
+      const boxX = xPos + 10 + boxWidth > innerWidth 
+        ? xPos - 10 - boxWidth  // Show to the left if not enough space on right
+        : xPos + 10;            // Show to the right by default
+        
+      const boxY = 10; // Fixed distance from top
+      // Create box
       hoverAnnotationGroup
         .append("rect")
         .attr("x", boxX)
@@ -321,92 +340,98 @@ function drawChart(data) {
         .attr("ry", 4)
         .attr("width", boxWidth)
         .attr("height", boxHeight)
-        .attr("fill", "rgba(255,255,255,0.98)")
-        .attr("stroke", "#f59e0b")
-        .attr("stroke-width", 1);
-
+        .attr("fill", "rgba(31, 41, 55, 0.95)") // Dark fill to match theme
+        .attr("stroke", "#60a5fa") // Blue border to match inflation line
+        .attr("stroke-width", 1)
+        .attr("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
+      // Add year text
       hoverAnnotationGroup
         .append("text")
-        .attr("x", boxX + 8)
-        .attr("y", boxY + 16)
-        .attr("fill", "#111827")
-        .attr("font-size", 11)
+        .attr("x", boxX + padding)
+        .attr("y", boxY + padding)
+        .attr("font-weight", "bold")
+        .attr("fill", "#ffffff") // White text
+        .attr("font-size", "11px")
+        .attr("font-family", "Arial")
+        .attr("dominant-baseline", "hanging")  
         .text(`${d.year}:`);
-
-      hoverAnnotationGroup
-        .append("text")
-        .attr("x", boxX + 8)
-        .attr("y", boxY + 30)
-        .attr("fill", "#4b5563")
-        .attr("font-size", 10)
-        .text(note);
+      // Add wrapped text lines
+      lines.forEach((lineText, i) => {
+        hoverAnnotationGroup
+          .append("text")
+          .attr("x", boxX + padding)
+          .attr("y", boxY + padding + lineHeight * (i + 1))
+          .attr("fill", "#d1d5db") // Light gray text
+          .attr("font-size", "10px")
+          .attr("font-family", "Arial")
+          .attr("dominant-baseline", "hanging")  
+          .text(lineText);
+      });
     }
+  }
+  // Helper function to calculate text width
+  function getTextWidth(text, font) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = font;
+    return context.measureText(text).width;
   }
 
   axisToggleInput.addEventListener("change", function () {
-    axisMode = this.checked ? "single" : "dual";
-    axisToggleText.textContent = this.checked ? "Single axis" : "Dual axis";
-    updateYDomains();
-    redrawAxesAndLines(true);
-  });
+    axisMode = this.checked ? "single" : "dual"
+    axisToggleText.textContent = this.checked ? "Single axis" : "Dual axis"
+    updateYDomains()
+    redrawAxesAndLines(true)
+  })
 
   function updateYDomains() {
-    const minInfl = d3.min(data, (d) => d.inflation);
-    const maxInfl = d3.max(data, (d) => d.inflation);
-    const minGdp = d3.min(data, (d) => d.gdp);
-    const maxGdp = d3.max(data, (d) => d.gdp);
+    const minInfl = window.d3.min(data, (d) => d.inflation)
+    const maxInfl = window.d3.max(data, (d) => d.inflation)
+    const minGdp = window.d3.min(data, (d) => d.gdp)
+    const maxGdp = window.d3.max(data, (d) => d.gdp)
 
     if (axisMode === "dual") {
-      yInflation.domain([Math.min(0, minInfl), maxInfl * 1.1]);
-      yGDP.domain([Math.min(0, minGdp), maxGdp * 1.15]);
+      yInflation.domain([Math.min(0, minInfl), maxInfl * 1.1])
+      yGDP.domain([Math.min(0, minGdp), maxGdp * 1.15])
     } else {
-      const overallMin = Math.min(0, minInfl, minGdp);
-      const overallMax = Math.max(maxInfl, maxGdp);
-      yInflation.domain([overallMin, overallMax * 1.1]);
+      const overallMin = Math.min(0, minInfl, minGdp)
+      const overallMax = Math.max(maxInfl, maxGdp)
+      yInflation.domain([overallMin, overallMax * 1.1])
     }
   }
 
   function redrawAxesAndLines(withTransition = false) {
-    const t = withTransition
-      ? svg.transition().duration(500)
-      : svg.transition().duration(0);
+    const t = withTransition ? svg.transition().duration(500) : svg.transition().duration(0)
 
-    xAxisG.transition(t).call(xAxis);
+    xAxisG.transition(t).call(xAxis)
 
     if (axisMode === "dual") {
-      yAxisLeftG.transition(t).call(yAxisLeft);
-      yAxisRightG.transition(t).style("opacity", 1).call(yAxisRight);
-      yInflLabel.text("Inflation (%)");
-      yGDPLabel.text("GDP growth (%)");
+      yAxisLeftG.transition(t).call(yAxisLeft)
+      yAxisRightG.transition(t).style("opacity", 1).call(yAxisRight)
+      yInflLabel.text("Inflation (%)")
+      yGDPLabel.text("GDP growth (%)")
     } else {
-      yAxisLeftG.transition(t).call(yAxisLeft);
-      yAxisRightG.transition(t).style("opacity", 0);
-      yInflLabel.text("Inflation & GDP (%)");
-      yGDPLabel.text("");
+      yAxisLeftG.transition(t).call(yAxisLeft)
+      yAxisRightG.transition(t).style("opacity", 0)
+      yInflLabel.text("Inflation & GDP (%)")
+      yGDPLabel.text("")
     }
 
     gridG
       .transition(t)
-      .call(
-        d3
-          .axisLeft(yInflation)
-          .ticks(6)
-          .tickSize(-innerWidth)
-          .tickFormat("")
-      )
-      .call((g) => g.select(".domain").remove());
+      .call(window.d3.axisLeft(yInflation).ticks(6).tickSize(-innerWidth).tickFormat(""))
+      .call((g) => g.select(".domain").remove())
 
-    inflationPath.datum(data).transition(t).attr("d", lineInflation);
+    inflationPath.datum(data).transition(t).attr("d", lineInflation)
 
     if (axisMode === "dual") {
-      gdpPath.datum(data).transition(t).attr("d", lineGDP_dual);
+      gdpPath.datum(data).transition(t).attr("d", lineGDP_dual)
     } else {
-      gdpPath.datum(data).transition(t).attr("d", lineGDP_single);
+      gdpPath.datum(data).transition(t).attr("d", lineGDP_single)
     }
   }
 
-  // Optional: scroll zoom on x only, without breaking hover
-  const zoom = d3
+  const zoom = window.d3
     .zoom()
     .scaleExtent([1, 8])
     .translateExtent([
@@ -418,12 +443,89 @@ function drawChart(data) {
       [innerWidth, innerHeight],
     ])
     .on("zoom", (event) => {
-      const zx = event.transform.rescaleX(
-        d3.scaleLinear().domain(originalXDomain).range([0, innerWidth])
-      );
-      x.domain(zx.domain());
-      redrawAxesAndLines(false);
-    });
+      // Create new x scale with the zoomed domain
+      const newX = event.transform.rescaleX(window.d3.scaleLinear().domain(originalXDomain).range([0, innerWidth]))
+      
+      // Update the main x scale domain
+      const [x0, x1] = newX.domain()
+      x.domain([x0, x1])
+      
+      // Filter data to visible domain for better performance
+      const visibleData = data.filter(d => d.year >= Math.floor(x0) && d.year <= Math.ceil(x1))
+      const displayData = visibleData.length > 0 ? visibleData : data
 
-  svg.call(zoom);
+      // Update the axis
+      xAxisG.call(xAxis)
+
+      // Redraw the lines with the updated x scale and filtered data
+      inflationPath.datum(displayData).attr("d", lineInflation)
+
+      if (axisMode === "dual") {
+        gdpPath.datum(displayData).attr("d", lineGDP_dual)
+      } else {
+        gdpPath.datum(displayData).attr("d", lineGDP_single)
+      }
+    })
+  overlay.call(zoom)
 }
+
+// Add this after the zoom definition
+const resetZoom = () => {
+  svg.transition()
+    .duration(750)
+    .call(zoom.transform, d3.zoomIdentity)
+}
+
+// Add a reset button
+const resetButton = container.append('button')
+  .text('Reset Zoom')
+  .style('position', 'absolute')
+  .style('right', '10px')
+  .style('top', '10px')
+  .on('click', resetZoom)
+
+window.d3
+  .csv("data/vietnam_data.csv")
+  .then((data) => {
+    data.forEach((d) => {
+      d.year = +d.year
+      d.inflation = +d.inflation
+      d.gdp = +d.gdp
+    })
+    drawChart(data)
+  })
+  .catch((error) => {
+    console.warn("CSV not found, using fallback data:", error)
+    // Use inline fallback data for Vietnam CPI and GDP
+    const fallbackData = [
+      { year: 1996, inflation: 4.5, gdp: 9.3 },
+      { year: 1997, inflation: 3.6, gdp: 8.2 },
+      { year: 1998, inflation: 7.3, gdp: 5.8 },
+      { year: 1999, inflation: 4.1, gdp: 4.8 },
+      { year: 2000, inflation: -1.7, gdp: 6.8 },
+      { year: 2001, inflation: -0.4, gdp: 6.9 },
+      { year: 2002, inflation: 4.0, gdp: 7.1 },
+      { year: 2003, inflation: 3.2, gdp: 7.3 },
+      { year: 2004, inflation: 7.8, gdp: 7.8 },
+      { year: 2005, inflation: 8.3, gdp: 7.5 },
+      { year: 2006, inflation: 7.5, gdp: 7.0 },
+      { year: 2007, inflation: 8.3, gdp: 7.1 },
+      { year: 2008, inflation: 23.1, gdp: 5.7 },
+      { year: 2009, inflation: 6.9, gdp: 5.4 },
+      { year: 2010, inflation: 8.9, gdp: 6.4 },
+      { year: 2011, inflation: 18.7, gdp: 6.2 },
+      { year: 2012, inflation: 9.1, gdp: 5.2 },
+      { year: 2013, inflation: 6.6, gdp: 5.4 },
+      { year: 2014, inflation: 4.1, gdp: 6.0 },
+      { year: 2015, inflation: 0.6, gdp: 6.7 },
+      { year: 2016, inflation: 2.7, gdp: 6.2 },
+      { year: 2017, inflation: 3.5, gdp: 6.8 },
+      { year: 2018, inflation: 3.5, gdp: 7.1 },
+      { year: 2019, inflation: 2.8, gdp: 7.0 },
+      { year: 2020, inflation: 3.2, gdp: 2.9 },
+      { year: 2021, inflation: 1.8, gdp: 2.6 },
+      { year: 2022, inflation: 3.2, gdp: 8.0 },
+      { year: 2023, inflation: 3.3, gdp: 5.0 },
+    ]
+    drawChart(fallbackData)
+  })

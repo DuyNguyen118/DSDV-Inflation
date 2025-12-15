@@ -246,6 +246,21 @@ input:checked+.Line-slider:before {
     padding: 0;
 }
 
+
+#vietnam-chart .annotation-text {
+  text-anchor: start;
+  white-space: pre;
+}
+
+#vietnam-chart .annotation-box {
+  fill: rgba(255, 255, 255, 0.95);
+  stroke: #f59e0b;
+  stroke-width: 1;
+  rx: 4;
+  ry: 4;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     #vietnam-chart-container {
