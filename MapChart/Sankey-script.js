@@ -369,11 +369,9 @@
     Plotly.react('sankey-chart', data, layout, config);
   }
 
-  // ==================== LEGEND CREATION (GIỮ NGUYÊN) ====================
   function createLegend() {
     const chartContainer = document.getElementById('sankey-chart');
 
-    // Check if legend already exists
     if (document.getElementById('chartLegend')) return;
 
     const legend = document.createElement('div');
@@ -385,7 +383,7 @@
     font-size: 13px;
     color: var(--text-secondary);
     flex-wrap: wrap;
-    padding: 14px 18px;
+    padding: 14px 70px;
     background: var(--card-bg);
     border-radius: 8px;
     border: 1px solid #e0e6ea;

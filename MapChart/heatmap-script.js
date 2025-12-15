@@ -139,5 +139,6 @@ d3.csv("data/CPI_average_year.csv").then(data => {
         .attr("x", width)
         .attr("y", height + 40)
         .style("font-weight", "bold")
+        .attr("fill", "#fff")
         .text("Year");
 });

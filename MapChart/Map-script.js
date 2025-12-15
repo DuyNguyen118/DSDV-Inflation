@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             itemDiv.append("span")
                 .style("font-size", "12px")
-                .style("color", "#333")
+                .style("color", "#fff")
                 .text(label);
         });
     }
@@ -470,6 +470,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
+    }
+
+    // Scroll Animation Observer
+    const chartSection = document.querySelector('.full-width-chart');
+    if (chartSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, {
+            threshold: 0.2
+        });
+        observer.observe(chartSection);
     }
 
 });

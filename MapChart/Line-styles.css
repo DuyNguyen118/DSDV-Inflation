@@ -4,9 +4,7 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Chart SVG */
@@ -26,7 +24,7 @@
 
 .axis text {
     font-size: 12px;
-    fill: #666;
+    fill: #fff;
 }
 
 .grid line {

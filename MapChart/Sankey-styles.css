@@ -2,7 +2,7 @@
 
 /* Removed global :root, *, body styles to avoid conflict */
 
-.container {
+.sankey-container-unused {
   max-width: 1600px;
   margin: 0 auto;
   background: var(--card-bg);
@@ -360,19 +360,7 @@ tbody tr:hover {
   --card-bg: #fbfcfd;
 }
 
-html,
-body {
-  height: 100%;
-  margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-}
-
-body {
-  background: var(--bg);
-  color: #2c3e50;
-  padding: 18px;
-  box-sizing: border-box
-}
+/* Global overrides removed */
 
 .sankey-topbar {
   display: flex;

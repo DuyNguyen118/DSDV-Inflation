@@ -102,7 +102,7 @@ function drawChart(data) {
     .attr("class", "x-axis")
     .call(xAxis)
     .call((g) =>
-      g.selectAll("text").style("fill", "#4b5563").style("font-size", "11px")
+      g.selectAll("text").style("fill", "#FFFFFF").style("font-size", "11px")
     )
     .call((g) => g.selectAll("line").style("stroke", "#e5e7eb"))
     .call((g) => g.select(".domain").style("stroke", "#9ca3af"));
