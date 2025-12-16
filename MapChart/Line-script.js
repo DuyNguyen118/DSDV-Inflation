@@ -493,7 +493,7 @@ xAxisG.selectAll(".tick line")
   .style("stroke", "#e5e7eb")
   .style("stroke-opacity", "0.7")
   .style("shape-rendering", "crispEdges");
-  
+
       // Redraw the lines with the updated x scale and filtered data
       inflationPath.datum(displayData).attr("d", lineInflation)
 
@@ -506,16 +506,48 @@ xAxisG.selectAll(".tick line")
   overlay.call(zoom)
 }
 
-// Fallback data loading
-window.d3
-  .csv("data/vietnam_data.csv")
-  .then((data) => {
-    data.forEach((d) => {
-      d.year = +d.year
-      d.inflation = +d.inflation
-      d.gdp = +d.gdp
+// Load and process data from multiple CSV files
+Promise.all([
+  d3.csv("data/inflation-consumer-price.csv"),
+  d3.csv("data/gdp-growth-rate.csv")
+]).then(([inflationData, gdpData]) => {
+  // Process inflation data for Vietnam
+  const vietnamInflation = inflationData
+    .filter(d => d['Country Name'] === 'Vietnam')
+    .map(d => {
+      const entry = { year: +d.Year, inflation: +d['Inflation, consumer prices (annual %)'] };
+      return !isNaN(entry.year) && !isNaN(entry.inflation) ? entry : null;
     })
-    drawChart(data)
+    .filter(Boolean);
+  // Process GDP data for Vietnam
+  const vietnamGDP = gdpData
+    .filter(d => d['Country Name'] === 'Vietnam')
+    .map(d => {
+      const entry = { year: +d.Year, gdp: +d['GDP growth (annual %)'] };
+      return !isNaN(entry.year) && !isNaN(entry.gdp) ? entry : null;
+    })
+    .filter(Boolean);
+  // Merge the data
+  const combinedData = [];
+  const allYears = new Set([
+    ...vietnamInflation.map(d => d.year),
+    ...vietnamGDP.map(d => d.year)
+  ]);
+  allYears.forEach(year => {
+    const inflationEntry = vietnamInflation.find(d => d.year === year);
+    const gdpEntry = vietnamGDP.find(d => d.year === year);
+    
+    if (inflationEntry || gdpEntry) {
+      combinedData.push({
+        year,
+        inflation: inflationEntry?.inflation,
+        gdp: gdpEntry?.gdp
+      });
+    }
+  });
+  // Sort by year and draw the chart
+  combinedData.sort((a, b) => a.year - b.year);
+  drawChart(combinedData);
   })
   .catch((error) => {
     console.warn("CSV not found, using fallback data:", error)
