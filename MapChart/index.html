@@ -175,8 +175,6 @@
             </div>
         </section>
 
-        <section id="data" style="display: none;"></section>
-
         <section class="chart-section" id="vietnam-cpi">
             <h3>Vietnam CPI Inflation vs GDP Growth</h3>
             <div class="chart-actions">
@@ -240,6 +238,80 @@
                 </div>
             </div>
         </section>
+        <section class="data-section" id="data">
+    <div class="data-container">
+        <div class="data-info">
+            <h2>DATA &<br>METHODOLOGY</h2>
+            <p class="data-subtitle">
+                Reliability is paramount. Our visualizations are powered by authoritative economic datasets, processed with Python, and rendered via D3.js.
+            </p>
+
+            <div class="source-list">
+                <div class="source-item">
+                    <div class="source-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <div>
+                        <h4>World Bank (WDI)</h4>
+                        <p>Global Inflation & GDP Growth (1996–2024)</p>
+                    </div>
+                </div>
+
+                <div class="source-item">
+                    <div class="source-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                    </div>
+                    <div>
+                        <h4>GSO Vietnam</h4>
+                        <p>Monthly CPI & Sectoral Pricing (2010–2024)</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="https://github.com/DuyNguyen118/DSDV-Inflation" target="_blank" class="github-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                View Source Code
+            </a>
+        </div>
+
+        <div class="data-preview">
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="filename">data_processing.py</span>
+                </div>
+                <div class="window-body">
+<pre><code><span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+
+<span class="comment"># 1. Load Raw Datasets</span>
+global_inflation = pd.read_csv(<span class="string">"data/wdi_inflation.csv"</span>)
+vietnam_cpi = pd.read_csv(<span class="string">"data/gso_cpi_monthly.csv"</span>)
+
+<span class="comment"># 2. Preprocessing & Cleaning</span>
+<span class="keyword">def</span> <span class="func">clean_data</span>(df):
+    df = df.dropna() <span class="comment"># Remove missing values</span>
+    df[<span class="string">"Year"</span>] = pd.to_datetime(df[<span class="string">"Date"</span>]).dt.year
+    <span class="keyword">return</span> df
+
+<span class="comment"># 3. Sector Attribution (Sankey Logic)</span>
+<span class="comment"># Mapping macro drivers to CPI components...</span>
+attribution = {
+    <span class="string">"Energy"</span>: <span class="string">"Transport"</span>,
+    <span class="string">"Food_Shock"</span>: <span class="string">"Food_Services"</span>
+}
+
+<span class="comment"># Export for Visualization</span>
+print(<span class="string">"Data ready for D3.js rendering..."</span>)
+</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
     </main>
 
     <footer class="footer" id="team">
