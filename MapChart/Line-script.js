@@ -74,21 +74,23 @@ function drawChart(data) {
     .attr("height", innerHeight)
 
   const tooltip = window.d3.select("#line-tooltip")
-    .style("background-color", "rgba(31, 41, 55, 0.95)") // Dark bg
-    .style("color", "#ffffff") // White text
+    .style("background-color", "rgba(31, 41, 55, 0.95)")
+    .style("color", "#ffffff")
     .style("padding", "8px")
     .style("border-radius", "4px")
-    .style("border", "1px solid #4b5563") // Gray border
+    .style("border", "1px solid #4b5563")
     .style("font-size", "12px");
 
   const axisToggleInput = document.getElementById("axis-toggle-input")
-  const axisToggleText = document.getElementById("axis-toggle-text")
+  const labelDual = document.getElementById("label-dual")
+  const labelSingle = document.getElementById("label-single")
 
   let axisMode = "dual" // 'dual' or 'single'
 
   // Sync the checkbox with the initial mode
   axisToggleInput.checked = false // false for dual axis
-  axisToggleText.textContent = "Dual axis"
+  labelDual.classList.add('active')
+  labelSingle.classList.remove('active')
 
   const x = window.d3
     .scaleLinear()
@@ -112,26 +114,26 @@ function drawChart(data) {
     .attr("transform", `translate(0,${innerHeight})`)
     .attr("class", "x-axis")
     .call(xAxis)
-    .call((g) => g.selectAll("text").style("fill", "#000000").style("font-size", "11px"))
+    .call((g) => g.selectAll("text").style("fill", "#4b5563").style("font-size", "11px"))
     .call((g) => g.selectAll("line").style("stroke", "#e5e7eb"))
-    .call((g) => g.select(".domain").style("stroke", "#9ca3af"))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
 
   const yAxisLeftG = g
     .append("g")
-    .attr("class", "y-axis-left")
+    .attr("class", "y-axis y-axis-left")
     .call(yAxisLeft)
     .call((g) => g.selectAll("text").style("fill", "#60a5fa").style("font-size", "11px"))
     .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 1))
-    .call((g) => g.select(".domain").style("stroke", "#9ca3af"))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
 
   const yAxisRightG = g
     .append("g")
-    .attr("class", "y-axis-right")
+    .attr("class", "y-axis y-axis-right")
     .attr("transform", `translate(${innerWidth},0)`)
     .call(yAxisRight)
-    .call((g) => g.selectAll("text").style("fill", "#f97373").style("font-size", "11px"))
+    .call((g) => g.selectAll("text").style("fill", "#fb7185").style("font-size", "11px"))
     .call((g) => g.selectAll("line").remove())
-    .call((g) => g.select(".domain").style("stroke", "#4b5563"))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
 
   const yInflLabel = svg
     .append("text")
@@ -139,14 +141,16 @@ function drawChart(data) {
     .attr("y", margin.top - 10)
     .attr("fill", "#60a5fa")
     .attr("font-size", 11)
+    .attr("font-family", "Inter, sans-serif")
     .text("Inflation (%)")
 
   const yGDPLabel = svg
     .append("text")
     .attr("x", width - margin.right + 30)
     .attr("y", margin.top - 10)
-    .attr("fill", "#f97373")
+    .attr("fill", "#fb7185")
     .attr("font-size", 11)
+    .attr("font-family", "Inter, sans-serif")
     .style("text-anchor", "end")
     .text("GDP growth (%)")
 
@@ -154,7 +158,7 @@ function drawChart(data) {
     .append("g")
     .attr("class", "grid")
     .call(window.d3.axisLeft(yInflation).ticks(6).tickSize(-innerWidth).tickFormat(""))
-    .call((g) => g.selectAll("line").style("stroke", "#000000").style("stroke-opacity", 1))
+    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 0.7))
     .call((g) => g.select(".domain").remove())
 
   const clippedGroup = g.append("g").attr("clip-path", "url(#chart-clip)")
@@ -163,19 +167,19 @@ function drawChart(data) {
     .line()
     .x((d) => x(d.year))
     .y((d) => yInflation(d.inflation))
-    .curve(d3.curveLinear)  // Changed from curveMonotoneX
+    .curve(d3.curveLinear)
 
   const lineGDP_dual = window.d3
     .line()
     .x((d) => x(d.year))
     .y((d) => yGDP(d.gdp))
-    .curve(d3.curveLinear)  // Changed from curveMonotoneX
+    .curve(d3.curveLinear)
 
   const lineGDP_single = window.d3
     .line()
     .x((d) => x(d.year))
     .y((d) => yInflation(d.gdp))
-    .curve(d3.curveLinear)  // Changed from curveMonotoneX
+    .curve(d3.curveLinear)
 
   const inflationPath = clippedGroup
     .append("path")
@@ -296,9 +300,9 @@ function drawChart(data) {
     hoverAnnotationGroup.selectAll("*").remove();
     const note = eventNotes[d.year];
     if (note) {
-      const padding = 8;
+      const padding = 10;
       const lineHeight = 16;
-      const maxWidth = 220; // Increased max width
+      const maxWidth = 200;
       const words = note.split(/\s+/);
       let line = '';
       const lines = [];
@@ -306,8 +310,8 @@ function drawChart(data) {
       // Simple word wrapping
       for (const word of words) {
         const testLine = line ? line + ' ' + word : word;
-        const testWidth = getTextWidth(testLine, '10px Arial');
-        if (testWidth <= maxWidth - (2 * padding) - 10) { // Added buffer for wrapping
+        const testWidth = getTextWidth(testLine, '11px Google Sans');
+        if (testWidth <= maxWidth - (2 * padding)) {
           line = testLine;
         } else {
           if (line) lines.push(line);
@@ -316,59 +320,64 @@ function drawChart(data) {
       }
       if (line) lines.push(line);
       
-      // Calculate max line width
-      let maxLineW = getTextWidth(`${d.year}:`, 'bold 11px Arial');
+      // Calculate box dimensions
+      const yearWidth = getTextWidth(`${d.year}:`, 'bold 12px Google Sans');
+      let maxLineW = yearWidth;
       lines.forEach(l => {
-        maxLineW = Math.max(maxLineW, getTextWidth(l, '10px Arial'));
+        maxLineW = Math.max(maxLineW, getTextWidth(l, '11px Google Sans'));
       });
       
-      const boxWidth = Math.min(maxWidth, Math.max(120, maxLineW + 2 * padding + 10)); // Added 10px buffer
+      const boxWidth = Math.min(maxWidth, maxLineW + 2 * padding);
       const boxHeight = (lines.length + 1) * lineHeight + (2 * padding);
       
-      // Calculate position (try to keep it within the chart bounds)
-      const boxX = xPos + 10 + boxWidth > innerWidth 
-        ? xPos - 10 - boxWidth  // Show to the left if not enough space on right
-        : xPos + 10;            // Show to the right by default
+      // Calculate position
+      const boxX = xPos + 15 + boxWidth > innerWidth 
+        ? xPos - 15 - boxWidth
+        : xPos + 15;
         
-      const boxY = 10; // Fixed distance from top
-      // Create box
+      const boxY = 15;
+      
+      // Create box with improved styling
       hoverAnnotationGroup
         .append("rect")
         .attr("x", boxX)
         .attr("y", boxY)
-        .attr("rx", 4)
-        .attr("ry", 4)
+        .attr("rx", 6)
+        .attr("ry", 6)
         .attr("width", boxWidth)
         .attr("height", boxHeight)
-        .attr("fill", "rgba(31, 41, 55, 0.95)") // Dark fill to match theme
-        .attr("stroke", "#60a5fa") // Blue border to match inflation line
-        .attr("stroke-width", 1)
-        .attr("filter", "drop-shadow(0 2px 4px rgba(0,0,0,0.1))");
+        .attr("fill", "rgba(255, 255, 255, 0.95)")
+        .attr("stroke", "#eb99a6ea")
+        .attr("stroke-width", 2)
+        .attr("filter", "drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))");
+      
       // Add year text
       hoverAnnotationGroup
         .append("text")
         .attr("x", boxX + padding)
         .attr("y", boxY + padding)
         .attr("font-weight", "bold")
-        .attr("fill", "#000000") // White text
-        .attr("font-size", "11px")
-        .attr("font-family", "Arial")
+        .attr("fill", "#1f2937")
+        .attr("font-size", "12px")
+        .attr("font-family", "Google Sans, sans-serif")
         .attr("dominant-baseline", "hanging")  
         .text(`${d.year}:`);
+      
       // Add wrapped text lines
       lines.forEach((lineText, i) => {
         hoverAnnotationGroup
           .append("text")
           .attr("x", boxX + padding)
           .attr("y", boxY + padding + lineHeight * (i + 1))
-          .attr("fill", "#000000") // Light gray text
-          .attr("font-size", "10px")
-          .attr("font-family", "Arial")
+          .attr("fill", "#374151")
+          .attr("font-size", "11px")
+          .attr("font-family", "Google Sans, sans-serif")
           .attr("dominant-baseline", "hanging")  
           .text(lineText);
       });
     }
   }
+
   // Helper function to calculate text width
   function getTextWidth(text, font) {
     const canvas = document.createElement('canvas');
@@ -379,7 +388,16 @@ function drawChart(data) {
 
   axisToggleInput.addEventListener("change", function () {
     axisMode = this.checked ? "single" : "dual"
-    axisToggleText.textContent = this.checked ? "Single axis" : "Dual axis"
+    
+    // Update active labels
+    if (axisMode === "dual") {
+      labelDual.classList.add('active')
+      labelSingle.classList.remove('active')
+    } else {
+      labelDual.classList.remove('active')
+      labelSingle.classList.add('active')
+    }
+    
     updateYDomains()
     redrawAxesAndLines(true)
   })
@@ -405,17 +423,21 @@ function drawChart(data) {
 
     xAxisG.transition(t).call(xAxis)
 
-    if (axisMode === "dual") {
-      yAxisLeftG.transition(t).call(yAxisLeft)
-      yAxisRightG.transition(t).style("opacity", 1).call(yAxisRight)
-      yInflLabel.text("Inflation (%)")
-      yGDPLabel.text("GDP growth (%)")
-    } else {
-      yAxisLeftG.transition(t).call(yAxisLeft)
-      yAxisRightG.transition(t).style("opacity", 0)
-      yInflLabel.text("Inflation & GDP (%)")
-      yGDPLabel.text("")
-    }
+if (axisMode === "dual") {
+  yAxisLeftG.transition(t).call(yAxisLeft)
+  yAxisRightG.transition(t).style("opacity", 1).call(yAxisRight)
+  yInflLabel.text("Inflation (%)")
+  yGDPLabel.text("GDP growth (%)")
+  yGDPLabel.style("opacity", 1)
+  gdpPath.attr("stroke", "#fb7185")
+} else {
+  yAxisLeftG.transition(t).call(yAxisLeft)
+  yAxisRightG.transition(t).style("opacity", 0)
+  yInflLabel.text("Inflation & GDP growth (%)")
+  yGDPLabel.text("")
+  yGDPLabel.style("opacity", 0)
+  gdpPath.attr("stroke", "#fb7185") 
+}
 
     gridG
       .transition(t)
@@ -454,9 +476,24 @@ function drawChart(data) {
       const visibleData = data.filter(d => d.year >= Math.floor(x0) && d.year <= Math.ceil(x1))
       const displayData = visibleData.length > 0 ? visibleData : data
 
-      // Update the axis
-      xAxisG.call(xAxis)
+      // In the zoom event handler, update the axis call to include line styles:
+xAxisG.call(xAxis)
+  .selectAll("text")
+  .style("font-size", "11px")
+  .style("font-family", "Google Sans, sans-serif")
+  .style("fill", "#4b5563");  // Ensure text color is consistent
 
+// Add this after the xAxisG call to style the axis lines
+xAxisG.selectAll(".domain")
+  .style("stroke", "#d1d5db")
+  .style("stroke-width", "1px");
+
+// Style the tick lines
+xAxisG.selectAll(".tick line")
+  .style("stroke", "#e5e7eb")
+  .style("stroke-opacity", "0.7")
+  .style("shape-rendering", "crispEdges");
+  
       // Redraw the lines with the updated x scale and filtered data
       inflationPath.datum(displayData).attr("d", lineInflation)
 
@@ -469,21 +506,7 @@ function drawChart(data) {
   overlay.call(zoom)
 }
 
-// Add this after the zoom definition
-const resetZoom = () => {
-  svg.transition()
-    .duration(750)
-    .call(zoom.transform, d3.zoomIdentity)
-}
-
-// Add a reset button
-const resetButton = container.append('button')
-  .text('Reset Zoom')
-  .style('position', 'absolute')
-  .style('right', '10px')
-  .style('top', '10px')
-  .on('click', resetZoom)
-
+// Fallback data loading
 window.d3
   .csv("data/vietnam_data.csv")
   .then((data) => {

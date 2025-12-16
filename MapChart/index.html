@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="heatmap-style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="Sankey-styles.css">
     <link rel="stylesheet" href="home.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -133,12 +132,12 @@
             <h3>Vietnam CPI Inflation vs GDP Growth</h3>
             <div class="chart-actions">
                 <div class="axis-toggle">
-                    <span class="axis-toggle-label">Axis mode:</span>
+                    <span id="label-dual" class="toggle-label active">Dual axis</span>
                     <label class="switch">
-                        <input id="axis-toggle-input" type="checkbox" checked>
+                        <input id="axis-toggle-input" type="checkbox">
                         <span class="Line-slider"></span>
                     </label>
-                    <span id="axis-toggle-text">Dual axis</span>
+                    <span id="label-single" class="toggle-label">Single axis</span>
                 </div>
             </div>
             <div id="vietnam-chart-container">
