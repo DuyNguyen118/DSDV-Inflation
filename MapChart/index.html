@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="Sankey-styles.css">
     <link rel="stylesheet" href="home.css">
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 
@@ -85,21 +85,70 @@
     </header>
 
     <main class="main-shell">
-        <section class="section-heading" id="story">
-            <h2>Inflation indicators overview</h2>
-            <p>Inflation is a critical macroeconomic issue that affects economic stability and living standards
-                worldwide, with recent pressures driven by global supply chain disruptions, energy price volatility, and
-                geopolitical tensions. Traditional economic analysis methods often struggle to capture the complex and
-                interconnected nature of inflation across countries, limiting effective policy responses. This project
-                addresses these challenges by developing a data-driven framework to analyze global inflation trends,
-                with a focused case study on Vietnam. The framework transforms raw economic indicators - such as
-                consumer
-                price indices, commodity prices, and exchange rates - into clear, interpretable insights using
-                analytical
-                and visualization techniques. Designed to be accessible and user-friendly, the platform supports
-                policymakers, researchers, and the public in understanding inflation dynamics and making informed
-                economic and policy decisions.</p>
-        </section>
+        <section class="story-section" id="story">
+    <div class="story-container">
+        
+        <div class="story-left-panel">
+            <div class="decorative-lines"></div> <h2>CORE<br>INSIGHT</h2>
+            
+            <p class="story-insight-text">
+                On paper, Vietnam's inflation looks controlled. But headline stability masks a deeper truth: <strong>macroeconomic success has decoupled from household welfare.</strong>
+                <br><br>
+                While GDP grows, the cost of essentials—food, housing, education—persistently rises. Our data reveals that Vietnam hasn't solved inflation; it has merely redistributed the burden onto those least able to absorb it.
+            </p>
+        </div>
+
+        <div class="story-right-panel">
+            <div class="story-item">
+                <div class="item-number">01</div>
+                <div class="item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </div>
+                <div class="item-content">
+                    <h4>Global Inflation Rate</h4>
+                    <h4>— Map Chart</h4>
+                    <p>Contextualizing Vietnam within global instability trends.</p>
+                </div>
+            </div>
+
+            <div class="story-item">
+                <div class="item-number">02</div>
+                <div class="item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </div>
+                <div class="item-content">
+                    <h4>Vietnam CPI vs GDP</h4>
+                    <h4>— Line Chart</h4>
+                    <p>Showing how macro stability relies on external conditions.</p>
+                </div>
+            </div>
+
+            <div class="story-item">
+                <div class="item-number">03</div>
+                <div class="item-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                </div>
+                <div class="item-content">
+                    <h4>Sectoral Inflation</h4>
+                    <h4>— Heatmap</h4>
+                    <p>Uncovering the silent inflation in essential living costs.</p>
+                </div>
+            </div>
+
+<div class="story-item"> 
+    <div class="item-number">04</div>
+    <div class="item-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h6v6H4zM14 14h6v6h-6zM4 14h6v6H4zM14 4h6v6h-6zM10 7h4M10 17h4M7 10v4M17 10v4"></path></svg>
+    </div>
+    <div class="item-content">
+        <h4>Inflation Analysis</h4>
+        <h4>— Sankey Diagram</h4>
+        <p>Visualizing the trade-off between growth and welfare.</p>
+    </div>
+</div>
+        </div>
+    </div>
+</section>
 
         <section class="full-width-chart" id="global-inflation">
             <h3><bold>Global Inflation Rate by Country</bold></h3>

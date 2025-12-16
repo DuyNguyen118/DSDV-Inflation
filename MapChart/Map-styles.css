@@ -371,12 +371,7 @@ main {
     stroke: #fff;
     stroke-width: 0.5px;
     cursor: pointer;
-    transition: stroke-width 0.2s;
-}
-
-.country:hover {
-    stroke-width: 2px;
-    stroke: #333;
+    transition: opacity 0.2s ease, filter 0.2s ease;
 }
 
 .country.no-data {

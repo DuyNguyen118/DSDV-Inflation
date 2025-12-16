@@ -74,6 +74,7 @@
     align-items: flex-end;
     gap: 40px;
     flex-wrap: wrap;
+    margin-bottom: 100px;
 }
 
 /* 4. Cart Card Styling */
@@ -173,4 +174,148 @@
         font-size: 18px;
     }
 }
+}
+/* =========================================
+   NEW "THE STORY" SECTION (Split Layout)
+   ========================================= */
+
+.story-section {
+    padding: 0px 20px 80px 20px;
+    background-color: #fdfdfd; /* Matches your paper theme */
+    display: flex;
+    justify-content: center;
+}
+
+.story-container {
+    display: flex;
+    max-width: 1100px;
+    width: 100%;
+    gap: 60px; /* Space between black box and list */
+    align-items: stretch;
+}
+
+/* --- LEFT SIDE: The Black Block --- */
+.story-left-panel {
+    flex: 1;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 60px 40px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Add white lines inside the black box to match the style */
+.story-left-panel::before {
+    content: "";
+    position: absolute;
+    top: 68px;
+    left: -20px;
+    width: 100px;
+    height: 2px;
+}
+
+.story-left-panel h2 {
+    font-family: var(--font-display); /* Michroma or Inter Black */
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 0.9;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 10;
+}
+
+.story-insight-text {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e5e7eb; 
+    font-weight: 400;
+    border-top: 4px solid #ffffff; 
+    padding-top: 25px;
+    width: 100%;
+    text-align: justify;
+    hyphens: auto;       
+    text-justify: inter-word; 
+}
+
+.story-insight-text strong {
+    color: #ffffff;
+    font-weight: 700;
+}
+
+/* --- RIGHT SIDE: The List/Table --- */
+.story-right-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.story-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 25px 0;
+    border-bottom: 1px solid #e5e7eb;
+    transition: transform 0.2s ease;
+}
+
+.story-item:first-child {
+    border-top: 1px solid #e5e7eb;
+}
+
+.story-item:hover {
+    transform: translateX(10px); /* Subtle nudge on hover */
+}
+
+.item-number {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #111827;
+    margin-right: 25px;
+    padding-top: 2px;
+    width: 30px;
+}
+
+.item-icon {
+    margin-right: 20px;
+    color: #111827;
+    padding-top: 2px;
+}
+
+.item-content h4 {
+    font-family: var(--font-display); 
+    font-weight: 700;
+    font-size: 18;
+    color: #000000;
+    margin: 0 0 6px 0;
+    text-transform: uppercase;
+}
+
+.item-content p {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 900px) {
+    .story-container {
+        flex-direction: column;
+        gap: 40px;
+    }
+    
+    .story-left-panel {
+        padding: 40px 20px;
+    }
+
+    .decorative-lines {
+        display: none; /* Hide complex decoration on mobile */
+    }
 }

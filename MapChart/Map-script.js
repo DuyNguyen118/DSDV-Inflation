@@ -254,9 +254,8 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on("mouseover", function (event, d) {
                 d3.select(this)
-                    .attr("stroke", "#333")
-                    .attr("stroke-width", 2);
-
+                    .style("opacity", 0.75)  // Make the country slightly transparent
+                    .style("filter", "brightness(0.75)");  // Make it slightly brighter
                 const countryName = d.properties.NAME || d.properties.name;
                 const countryData = findCountryData(countryName);
 
@@ -287,8 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .on("mouseout", function () {
                 d3.select(this)
-                    .attr("stroke", "#fff")
-                    .attr("stroke-width", 0.5);
+                    .style("opacity", 1)  // Restore full opacity
+                    .style("filter", "brightness(1)");  // Restore original brightness
 
                 d3.selectAll(".map-tooltip").remove();
             });

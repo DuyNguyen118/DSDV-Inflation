@@ -44,7 +44,7 @@ d3.csv("data/CPI_average_year.csv").then(data => {
     const y = d3.scaleBand().range([0, height]).domain(commodities).padding(0.05);
     svg.append("g")
         .style("font-size", "14px")
-        .call(d3.axisLeft(y).tickSize(0))
+        .call(d3.axisLeft(y).tickFormat(d => d.split(' ')[0]))
         .select(".domain").remove();
 
     // --- Color scale (<100 blue, 100 white, >100 red) ---
