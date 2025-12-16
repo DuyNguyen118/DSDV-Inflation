@@ -112,7 +112,7 @@ function drawChart(data) {
     .attr("transform", `translate(0,${innerHeight})`)
     .attr("class", "x-axis")
     .call(xAxis)
-    .call((g) => g.selectAll("text").style("fill", "#FFFFFF").style("font-size", "11px"))
+    .call((g) => g.selectAll("text").style("fill", "#000000").style("font-size", "11px"))
     .call((g) => g.selectAll("line").style("stroke", "#e5e7eb"))
     .call((g) => g.select(".domain").style("stroke", "#9ca3af"))
 
@@ -154,7 +154,7 @@ function drawChart(data) {
     .append("g")
     .attr("class", "grid")
     .call(window.d3.axisLeft(yInflation).ticks(6).tickSize(-innerWidth).tickFormat(""))
-    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 1))
+    .call((g) => g.selectAll("line").style("stroke", "#000000").style("stroke-opacity", 1))
     .call((g) => g.select(".domain").remove())
 
   const clippedGroup = g.append("g").attr("clip-path", "url(#chart-clip)")
@@ -350,7 +350,7 @@ function drawChart(data) {
         .attr("x", boxX + padding)
         .attr("y", boxY + padding)
         .attr("font-weight", "bold")
-        .attr("fill", "#ffffff") // White text
+        .attr("fill", "#000000") // White text
         .attr("font-size", "11px")
         .attr("font-family", "Arial")
         .attr("dominant-baseline", "hanging")  
@@ -361,7 +361,7 @@ function drawChart(data) {
           .append("text")
           .attr("x", boxX + padding)
           .attr("y", boxY + padding + lineHeight * (i + 1))
-          .attr("fill", "#d1d5db") // Light gray text
+          .attr("fill", "#000000") // Light gray text
           .attr("font-size", "10px")
           .attr("font-family", "Arial")
           .attr("dominant-baseline", "hanging")  

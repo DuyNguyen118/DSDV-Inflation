@@ -1,14 +1,18 @@
 /* Global Styles*/
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
-    --primary-color: #e0e7ff;
-    --secondary-color: #bfdbfe;
+    --primary-color: #1e1b4b;
+    --secondary-color: #3b82f6;
     --accent-color: #60a5fa;
     --light-color: #1f2937;
     --dark-color: #0b0b15;
-    --text-color: #f9fafb;
-    --text-light: #d1d5db;
+    --text-color: #000000;
+    --text-light: #4b5563;
     --chart-bg: #ffffff;
-    --chart-border: rgba(255, 255, 255, 0.1);
+    --chart-border: rgba(0, 0, 0, 0.1);
 }
 
 * {
@@ -18,10 +22,10 @@
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: 'Google Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     line-height: 1.6;
-    color: var(--text-color);
-    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    color: #000000;
+    background: #FFFFFF;
     background-attachment: fixed;
     padding: 0;
     margin: 0;
@@ -47,7 +51,7 @@ a:hover {
 /* Header Styles */
 /* Hero / header */
 .hero {
-    padding: 40px 0 32px;
+    padding: 80px 0 32px;
 }
 
 .hero-inner {
@@ -60,14 +64,14 @@ a:hover {
 }
 
 .hero-brand {
-    font-family: 'Playfair Display', ui-serif, Georgia, "Times New Roman", serif;
+    font-family: 'Abril Fatface';
     font-size: 22px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
 }
 
 .hero-copy h1 {
-    font-family: 'Playfair Display', ui-serif, Georgia, "Times New Roman", serif;
+    font-family: 'Google Sans', 'Inter', sans-serif;
     font-size: clamp(40px, 4vw, 56px);
     line-height: 1.05;
     margin-bottom: 12px;
@@ -76,10 +80,47 @@ a:hover {
 .hero-copy p {
     max-width: 640px;
     font-size: 18px;
-    color: var(--text-light);
+    color: #000000;
     margin-bottom: 20px;
 }
 
+.hero-nav {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 15px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.hero-nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 24px;
+}
+
+.hero-nav li {
+    margin: 0;
+}
+
+.hero-nav a {
+    color: #000000;
+    font-weight: 500;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.hero-nav a:hover {
+    color: var(--accent-color);
+}
 
 .main-shell {
     max-width: 1200px;
@@ -94,14 +135,14 @@ a:hover {
 }
 
 .section-heading h2 {
-    font-family: 'Playfair Display', ui-serif, Georgia, "Times New Roman", serif;
+    font-family: 'Google Sans', 'Inter', sans-serif;
     font-size: 24px;
     margin-bottom: 4px;
 }
 
 .section-heading p {
     font-size: 14px;
-    color: var(--text-light);
+    color: #000000;
 }
 
 /* Navigation */
@@ -123,7 +164,7 @@ a:hover {
 }
 
 .navbar a {
-    color: var(--dark-color);
+    color: #000000;
     padding: 1rem 1.5rem;
     display: block;
     font-weight: 500;
@@ -131,11 +172,49 @@ a:hover {
 
 .navbar a:hover,
 .navbar a.active {
-    color: var(--secondary-color);
-    border-bottom: 3px solid var(--secondary-color);
+    color: #000000;
+    border-bottom: 3px solid #000000;
 }
 
 /* Main Content */
+/* Dropdown Menu Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 200px;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1001;
+    border-radius: 8px;
+    padding: 10px 0;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: var(--accent-color);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 main {
     padding: 2rem 0;
 }
@@ -146,7 +225,7 @@ main {
 }
 
 .intro h2 {
-    color: var(--primary-color);
+    color: #000000;
     margin-bottom: 1rem;
 }
 
@@ -173,7 +252,7 @@ main {
 }
 
 .full-width-chart h3 {
-    color: var(--primary-color);
+    color: #000000;
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
     text-align: center;
@@ -182,7 +261,7 @@ main {
 
 .chart-description {
     text-align: center;
-    color: var(--text-light);
+    color: #000000;
     font-size: 0.95rem;
     font-style: italic;
     margin-bottom: 1.5rem;
@@ -285,20 +364,56 @@ main {
 }
 
 .Map-slider-container {
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 15px;
     margin: 20px auto;
-    padding: 10px 0;
-    text-align: center;
-    z-index: 1;
-    background: transparent;
+    justify-content: center;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.play-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--secondary-color);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+}
+
+.play-btn:hover {
+    background-color: var(--accent-color);
+    transform: scale(1.05);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.slider-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 .Map-slider-label {
     display: block;
     font-size: 16px;
     font-weight: 500;
-    color: var(--primary-color);
-    margin-top: -30px;
+    color: #000000;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .Map-slider-label span {
@@ -308,16 +423,18 @@ main {
 }
 
 .Map-slider {
-    width: 80%;
-    max-width: 600px;
+    width: 100%;
     height: 8px;
     border-radius: 5px;
-    background: #ddd;
+    background: rgba(255, 255, 255, 0.1);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
-    margin: 0 auto;
+    margin: 0;
+    position: relative;
+    z-index: 2;
 }
+
 
 .Map-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -328,10 +445,12 @@ main {
     background: var(--secondary-color);
     cursor: pointer;
     transition: background 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-.map-slider::-webkit-slider-thumb:hover {
+.Map-slider::-webkit-slider-thumb:hover {
     background: var(--accent-color);
+    transform: scale(1.1);
 }
 
 .Map-slider::-moz-range-thumb {
@@ -342,22 +461,21 @@ main {
     cursor: pointer;
     border: none;
     transition: background 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .Map-slider::-moz-range-thumb:hover {
     background: var(--accent-color);
+    transform: scale(1.1);
 }
 
 .Map-slider-labels {
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    max-width: 600px;
-    margin: 0 auto;
+    width: 100%;
+    margin-top: 8px;
     font-size: 12px;
     color: var(--text-light);
-    position: relative;
-    top: 5px;
 }
 
 .chart-note {
@@ -391,7 +509,7 @@ main {
 
 .chart-container h3 {
     text-align: center;
-    color: var(--primary-color);
+    color: #000000;
     margin-bottom: 15px;
     font-size: 1.1rem;
 }
@@ -416,8 +534,8 @@ main {
 }
 
 .footer {
-    background-color: var(--dark-color);
-    color: white;
+    background-color: #f3f4f6;
+    color: #000000;
     text-align: center;
     padding: 1.5rem 0;
     margin-top: 2rem;
@@ -435,7 +553,7 @@ main {
 
 .student {
     padding: 1rem;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 8px;
 }
 
@@ -443,12 +561,12 @@ main {
     font-weight: 500;
     margin-bottom: 0.5rem;
     font-size: 1rem;
-    color: white;
+    color: #000000;
 }
 
 .student-id {
     font-size: 0.9rem;
-    color: var(--light-color);
+    color: #4b5563;
     font-family: monospace;
 }
 
@@ -518,14 +636,39 @@ main {
 .map-tooltip {
     position: absolute;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
+    background: rgba(255, 255, 255, 0.95);
+    color: #000000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
     border-radius: 4px;
     pointer-events: none;
     font-size: 12px;
     opacity: 0;
     transition: opacity 0.2s;
     z-index: 10;
+}
+
+/* Charts */
+.full-width-chart,
+.chart-section {
+    position: relative;
+    /* For tooltip positioning */
+    margin-bottom: 300px;
+    opacity: 1;
+    /* transition: opacity 0.8s ease-in-out; */
+}
+
+/* Ensure all chart titles are centered */
+.full-width-chart h3,
+.chart-section h3,
+.chart-section .subtitle {
+    text-align: center;
+    width: 100%;
+}
+
+.full-width-chart h3 {
+    margin-bottom: 8px;
+    color: #000000;
 }
 
 .map-tooltip h4 {
@@ -537,31 +680,4 @@ main {
 .map-tooltip p {
     margin: 0;
     padding: 0;
-}
-
-/* Money Drop Animation */
-#money-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.falling-money {
-    position: absolute;
-    top: -50px;
-    color: rgba(255, 255, 255, 0.4);
-    /* Subtle white/transparent to match dark theme */
-    user-select: none;
-    animation: fall linear forwards;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(110vh) rotate(360deg);
-    }
 }

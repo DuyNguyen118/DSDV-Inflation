@@ -447,28 +447,94 @@ document.addEventListener('DOMContentLoaded', function () {
 
             itemDiv.append("span")
                 .style("font-size", "12px")
-                .style("color", "#fff")
+                .style("color", "#000000")
                 .text(label);
         });
     }
 
     // Set up map year slider
+    // Set up map year slider and play button
     const mapYearSlider = document.getElementById('map-year-slider');
     const mapYearDisplay = document.getElementById('selected-map-year');
+    const playButton = document.getElementById('map-play-btn');
+
+    let isPlaying = false;
+    let playInterval = null;
+    const minYear = 2000;
+    const maxYear = 2024;
+    const playSpeed = 800; // ms per year
+
+    function updateMapYear(year) {
+        selectedMapYear = year;
+        if (mapYearDisplay) mapYearDisplay.textContent = selectedMapYear;
+        if (mapYearSlider) mapYearSlider.value = selectedMapYear;
+
+        // Recreate map with new year data
+        if (worldMap) {
+            if (worldMap.objects) {
+                createGlobalMap();
+            } else {
+                createGlobalMapGeoJSON();
+            }
+        }
+    }
+
+    function togglePlay() {
+        isPlaying = !isPlaying;
+
+        if (isPlaying) {
+            // Check if we are at the end, if so, restart from beginning
+            if (selectedMapYear >= maxYear) {
+                updateMapYear(minYear);
+            }
+
+            // Change icon to Pause
+            playButton.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                </svg>
+            `;
+
+            // Start animation
+            playInterval = setInterval(() => {
+                let nextYear = selectedMapYear + 1;
+                if (nextYear > maxYear) {
+                    togglePlay(); // Stop playing when reached the end
+                    return;
+                }
+                updateMapYear(nextYear);
+            }, playSpeed);
+
+        } else {
+            // Change icon to Play
+            playButton.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                </svg>
+            `;
+
+            // Stop animation
+            if (playInterval) {
+                clearInterval(playInterval);
+                playInterval = null;
+            }
+        }
+    }
 
     if (mapYearSlider && mapYearDisplay) {
         mapYearSlider.addEventListener('input', function () {
-            selectedMapYear = parseInt(this.value);
-            mapYearDisplay.textContent = selectedMapYear;
-
-            // Recreate map with new year data
-            if (worldMap) {
-                if (worldMap.objects) {
-                    createGlobalMap();
-                } else {
-                    createGlobalMapGeoJSON();
-                }
+            // Pause auto-play if user manually drags slider
+            if (isPlaying) {
+                togglePlay();
             }
+            updateMapYear(parseInt(this.value));
+        });
+    }
+
+    if (playButton) {
+        playButton.addEventListener('click', function (e) {
+            e.preventDefault(); // Prevent any default behavior
+            togglePlay();
         });
     }
 
@@ -492,5 +558,41 @@ document.addEventListener('DOMContentLoaded', function () {
             observer.observe(section);
         });
     }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                // Offset for fixed header
+                const headerOffset = 100;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+                const startPosition = window.pageYOffset;
+                const distance = targetPosition - startPosition;
+                const duration = 500; // Slow speed as requested
+                let start = null;
+
+                function step(timestamp) {
+                    const progress = timestamp - start;
+                    const percent = Math.min(progress / duration, 1);
+
+                    const ease = percent;
+
+                    window.scrollTo(0, startPosition + distance * ease);
+
+                    if (progress < duration) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        history.pushState(null, null, targetId);
+                    }
+                }
+
+                window.requestAnimationFrame(step);
+            }
+        });
+    });
 
 });
