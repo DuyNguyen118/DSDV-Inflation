@@ -451,6 +451,21 @@ tbody tr:hover {
   border-bottom: 1px solid rgba(0, 0, 0, 0.04)
 }
 
+.sankey-table-wrap th:nth-child(1),
+.sankey-table-wrap th:nth-child(2),
+.sankey-table-wrap th:nth-child(3),
+.sankey-table-wrap th:nth-child(4),
+.sankey-table-wrap th:nth-child(5),
+.sankey-table-wrap th:nth-child(6),
+.sankey-table-wrap td:nth-child(1),
+.sankey-table-wrap td:nth-child(2),
+.sankey-table-wrap td:nth-child(3),
+.sankey-table-wrap td:nth-child(4),
+.sankey-table-wrap td:nth-child(5),
+.sankey-table-wrap td:nth-child(6) {
+  color: black;
+}
+
 .sankey-center {
   text-align: center
 }
@@ -487,4 +502,20 @@ tbody tr:hover {
   font-size: 12px;
   color: var(--text-secondary);
   margin-top: 8px
+}
+
+/* Force Plotly hover styles to be standard to override any unintended inheritance */
+.js-plotly-plot .plotly .hovertext text,
+.js-plotly-plot .plotly .hovertext tspan {
+  fill: #333333 !important;
+  font-weight: normal !important;
+  font-family: 'Inter', sans-serif !important;
+  text-shadow: none !important;
+  stroke: none !important;
+}
+
+.js-plotly-plot .plotly .hovertext rect {
+  fill: rgba(255, 255, 255, 0.98) !important;
+  stroke: #cccccc !important;
+  stroke-width: 1px !important;
 }

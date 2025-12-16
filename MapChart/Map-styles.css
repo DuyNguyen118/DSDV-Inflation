@@ -161,6 +161,17 @@ main {
     transform: scale(1);
 }
 
+.chart-section {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.chart-section.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
 .full-width-chart h3 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;

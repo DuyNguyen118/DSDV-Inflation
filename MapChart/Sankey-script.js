@@ -300,28 +300,28 @@
         text: 'Macro Drivers',
         x: 0.05, y: 1.06,
         showarrow: false,
-        font: { size: 14, color: '#2c3e50', family: 'Inter', weight: 600 },
+        font: { size: 14, color: '#FFFFFF', family: 'Inter', weight: 600 },
         xanchor: 'center'
       },
       {
         text: 'CPI Sectors',
         x: 0.35, y: 1.06,
         showarrow: false,
-        font: { size: 14, color: '#2c3e50', family: 'Inter', weight: 600 },
+        font: { size: 14, color: '#FFFFFF', family: 'Inter', weight: 600 },
         xanchor: 'center'
       },
       {
         text: 'Headline CPI',
         x: 0.65, y: 1.06,
         showarrow: false,
-        font: { size: 14, color: '#2c3e50', family: 'Inter', weight: 600 },
+        font: { size: 14, color: '#FFFFFF', family: 'Inter', weight: 600 },
         xanchor: 'center'
       },
       {
         text: 'Economic Impact',
         x: 0.95, y: 1.06,
         showarrow: false,
-        font: { size: 14, color: '#2c3e50', family: 'Inter', weight: 600 },
+        font: { size: 14, color: '#FFFFFF', family: 'Inter', weight: 600 },
         xanchor: 'center'
       }
     ];
@@ -346,6 +346,13 @@
         color: linkColors,
         customdata: hoverTexts,
         hovertemplate: '%{customdata}<extra></extra>'
+      },
+      hoverlabel: {
+        bgcolor: "rgba(255, 255, 255, 0.95)",
+        bordercolor: "#ccc",
+        font: { color: "#333333", size: 12, family: "Inter, sans-serif" }, // Explicit color to override node color
+        namelength: -1,
+        align: "left"
       }
     }];
 
@@ -355,13 +362,7 @@
       height: 500,
       paper_bgcolor: "transparent",
       plot_bgcolor: "transparent",
-      annotations: annotations,
-      hoverlabel: {
-        bgcolor: "rgba(255, 255, 255, 0.95)",
-        bordercolor: "#ccc",
-        font: { color: "#333", size: 12, family: "Inter, sans-serif" },
-        namelength: -1
-      }
+      annotations: annotations
     };
 
     const config = { displayModeBar: false, responsive: true };

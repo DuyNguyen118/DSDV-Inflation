@@ -473,8 +473,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Scroll Animation Observer
-    const chartSection = document.querySelector('.full-width-chart');
-    if (chartSection) {
+    // Scroll Animation Observer for all chart sections
+    const chartSections = document.querySelectorAll('.full-width-chart, .chart-section');
+
+    if (chartSections.length > 0) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -485,7 +487,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }, {
             threshold: 0.2
         });
-        observer.observe(chartSection);
+
+        chartSections.forEach(section => {
+            observer.observe(section);
+        });
     }
 
 });
