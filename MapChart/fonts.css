@@ -1,0 +1,39 @@
+/* Import Google Fonts - Using Michroma */
+@import url('https://fonts.googleapis.com/css2?family=Michroma&family=Google+Sans:wght@300;400;500;700&display=swap');
+
+:root {
+  /* Font Families - Updated to use Michroma */
+  --font-display: 'Michroma', sans-serif;
+  --font-body: 'Google Sans', sans-serif;
+  
+  /* Font Sizes */
+  --font-size-title: 2rem;
+  --font-size-subtitle: 1.25rem;
+  --font-size-body: 1rem;
+  --font-size-small: 0.875rem;
+  
+  --line-height-title: 1.2;
+  --line-height-body: 1.5;
+}
+
+/* Rest of your CSS remains the same */
+body {
+  font-family: var(--font-body);
+  line-height: var(--line-height-body);
+  color: #333;
+}
+
+.chart-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-title);
+  line-height: var(--line-height-title);
+  margin-bottom: 0.5em;
+}
+
+.chart-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-subtitle);
+  font-weight: 500;
+  margin-bottom: 1em;
+  color: #666;
+}

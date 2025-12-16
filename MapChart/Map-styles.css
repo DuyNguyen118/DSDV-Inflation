@@ -21,14 +21,37 @@ html {
     box-sizing: border-box;
 }
 
+/* Keep existing :root variables but update the body font */
 body {
-    font-family: 'Google Sans', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    line-height: 1.6;
-    color: #000000;
+    font-family: var(--font-body);
+    line-height: var(--line-height-body);
+    color: var(--text-color);
     background: #FFFFFF;
     background-attachment: fixed;
     padding: 0;
     margin: 0;
+}
+
+/* Update headings to use display font */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    line-height: var(--line-height-title);
+}
+
+/* Update specific elements */
+.header-left h1 {
+    font-family: var(--font-display);
+    font-size: var(--font-size-title);
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.header-left p {
+    font-family: var(--font-body);
+    font-size: var(--font-size-subtitle);
+    opacity: 0.9;
+    font-weight: 300;
 }
 
 .container {
@@ -57,17 +80,18 @@ a:hover {
 .hero-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 0;
 }
 
 .hero-brand {
-    font-family: 'Abril Fatface';
+    font-family: 'Michroma', sans-serif;
     font-size: 22px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-weight: 700;
 }
 
 .hero-copy h1 {
@@ -112,7 +136,6 @@ a:hover {
 
 .hero-nav a {
     color: #000000;
-    font-weight: 500;
     font-size: 14px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -135,7 +158,6 @@ a:hover {
 }
 
 .section-heading h2 {
-    font-family: 'Google Sans', 'Inter', sans-serif;
     font-size: 24px;
     margin-bottom: 4px;
 }
@@ -256,7 +278,6 @@ main {
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
     text-align: center;
-    font-weight: 500;
 }
 
 .chart-description {
@@ -426,7 +447,7 @@ main {
     width: 100%;
     height: 8px;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(7, 0, 0);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
@@ -567,7 +588,6 @@ main {
 .student-id {
     font-size: 0.9rem;
     color: #4b5563;
-    font-family: monospace;
 }
 
 @media (max-width: 992px) {

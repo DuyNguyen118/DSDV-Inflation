@@ -7,11 +7,23 @@
     border-radius: 8px;
 }
 
-/* Chart SVG */
 #chart {
     display: block;
     margin: 0 auto;
-    font-family: 'Google Sans', 'Inter', sans-serif;
+    font-family: var(--font-body);
+}
+
+/* Update axis text */
+.axis text {
+    font-size: var(--font-size-small);
+    fill: #000000;
+    font-family: var(--font-body);
+}
+
+/* Add this for chart titles if they exist */
+.chart-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-title);
 }
 
 /* Axis and Grid Lines */

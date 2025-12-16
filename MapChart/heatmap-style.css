@@ -6,6 +6,40 @@
     transform-origin: top center;
 }
 
+/* Update chart container */
+#heatmap {
+    font-family: var(--font-body);
+}
+
+/* Update axis text */
+.axis text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    fill: var(--text-color);
+}
+
+/* Update title and labels */
+.chart-title {
+    font-family: var(--font-display);
+    font-size: var(--font-size-title);
+}
+
+.chart-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--font-size-subtitle);
+    color: var(--text-light);
+}
+
+/* Update tooltip */
+#tooltip {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 4px;
+    pointer-events: none;
+}
+
 /* Heatmap Tooltip */
 .heatmap-tooltip {
     position: absolute;

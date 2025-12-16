@@ -1,0 +1,176 @@
+/* =========================================
+   HERO / HOME SECTION OVERRIDES
+   ========================================= */
+
+/* 1. Updated Navigation Bar */
+.hero-nav {
+    display: flex;
+    justify-content: space-between; /* Pushes Logo left, Menu right */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    padding: 15px 40px; /* Increased padding for better spacing */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* New Brand styling inside Nav */
+.nav-brand {
+    font-family: 'Michroma', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #111827;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.nav-brand:hover {
+    color: #2563eb;
+}
+
+/* Ensure UL (menu) stays on the right */
+.hero-nav ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 24px;
+}
+
+/* 2. Hero Text Styling */
+.hero-copy {
+    text-align: center;
+    max-width: 100% !important;
+    margin: 10px auto 0; 
+}
+
+.hero-copy h1 {
+    max-width: 100%;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    font-family: var(--font-body);
+}
+
+.hero-copy p {
+    max-width: 700px;
+    margin: 0 auto;
+    color: #4b5563;
+}
+
+/* 3. The Visuals Container (Carts) */
+.hero-visuals {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.carts-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+/* 4. Cart Card Styling */
+.cart-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent;
+    padding: 10px;
+}
+
+.cart-image-wrapper {
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.cart-card:hover .cart-image-wrapper {
+    transform: translateY(-5px); 
+}
+
+.cart-img {
+    max-height: 220px;
+    width: auto;
+    display: block;
+}
+
+/* 5. Cart Info & Typography */
+.cart-info {
+    text-align: center;
+}
+
+.year-badge {
+    display: inline-block;
+    background-color: #f3f4f6;
+    color: #1f2937;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    font-family: var(--font-body);
+}
+
+.year-badge.current {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.price-tag .amount {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1;
+    font-family: var(--font-display);
+}
+
+.price-tag .detail {
+    display: block;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+}
+
+/* 6. Arrow Separator */
+.cart-separator {
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 80px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .carts-wrapper {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .cart-separator {
+        transform: rotate(90deg);
+        padding-bottom: 0;
+    }
+    
+    .hero-copy h1 {
+        font-size: 25px;
+    }
+
+    .hero-nav {
+        padding: 15px 20px;
+
+    .nav-brand {
+        font-size: 18px;
+    }
+}
+}

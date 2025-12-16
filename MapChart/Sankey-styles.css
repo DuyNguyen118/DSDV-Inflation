@@ -11,29 +11,40 @@
   overflow: hidden;
 }
 
-/* Header Styles */
+/* Update header styles */
 .header {
-  background: linear-gradient(135deg, var(--cause-node) 0%, var(--sector-node) 100%);
-  color: #000000;
-  padding: 32px 40px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
+    background: linear-gradient(135deg, var(--cause-node) 0%, var(--sector-node) 100%);
+    color: #000000;
+    padding: 32px 40px;
+    font-family: var(--font-body);
 }
 
 .header-left h1 {
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  letter-spacing: -0.5px;
+    font-family: var(--font-display);
+    font-size: var(--font-size-title);
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
 }
 
 .header-left p {
-  font-size: 15px;
-  opacity: 0.9;
-  font-weight: 300;
+    font-family: var(--font-body);
+    font-size: var(--font-size-subtitle);
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+/* Update text elements */
+.node text, .link text {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
+    fill: var(--text-color);
+}
+
+/* Update tooltip */
+.tooltip {
+    font-family: var(--font-body);
+    font-size: var(--font-size-small);
 }
 
 /* Year Toggle */
@@ -519,4 +530,29 @@ tbody tr:hover {
   fill: rgba(255, 255, 255, 0.98) !important;
   stroke: #cccccc !important;
   stroke-width: 1px !important;
+}
+
+/* Remove text glow effect from Sankey diagram */
+.sankey-layout text {
+    text-shadow: none !important;
+    filter: none !important;
+    paint-order: normal !important;
+    stroke: none !important;
+    stroke-width: 0 !important;
+}
+
+/* If the above doesn't work, try these more specific selectors */
+#sankey-chart text,
+#sankey-chart .node text,
+#sankey-chart .link text {
+    text-shadow: none !important;
+    filter: none !important;
+    paint-order: normal !important;
+    stroke: none !important;
+    stroke-width: 0 !important;
+}
+
+/* If the glow is coming from the SVG filter */
+#sankey-chart defs {
+    display: none;
 }
