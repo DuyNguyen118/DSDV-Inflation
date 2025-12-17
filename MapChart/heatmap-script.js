@@ -1,12 +1,13 @@
 // --- Layout settings ---
-const margin = { top: 50, right: 50, bottom: 100, left: 220 };
-const width = 900 - margin.left - margin.right;
-const height = 600 - margin.top - margin.bottom;
+// Increased top margin to 80 to fit the legend properly without clipping
+const margin = { top: 80, right: 30, bottom: 40, left: 100 };
+const width = 700 - margin.left - margin.right;
+const height = 450 - margin.top - margin.bottom;
 
 // --- SVG container ---
 const svg = d3.select("#heatmap")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -14,6 +15,58 @@ const tooltip = d3.select("#heatmap-tooltip");
 
 // --- Load CSV data ---
 d3.csv("data/CPI_average_year.csv").then(data => {
+
+    // --- LEGEND (Adjusted Positioning) ---
+    const defs = svg.append("defs");
+    const linearGradient = defs.append("linearGradient")
+        .attr("id", "linear-gradient");
+
+    linearGradient.append("stop").attr("offset", "0%").attr("stop-color", "#4575b4");
+    linearGradient.append("stop").attr("offset", "50%").attr("stop-color", "#ffffff");
+    linearGradient.append("stop").attr("offset", "100%").attr("stop-color", "#d73027");
+
+    const legendWidth = 200;
+    const legendHeight = 10;
+    
+    // Center legend relative to chart width
+    const legendX = (width - legendWidth) / 2; 
+    // Position legend within the top margin space (negative Y relative to chart area)
+    const legendY = -40; 
+
+    // 1. "Stable (100)" Label - TOP CENTER
+    svg.append("text")
+        .attr("x", legendX + legendWidth / 2)
+        .attr("y", legendY - 10) // Positioned above the bar
+        .text("Stable (100)")
+        .style("font-size", "11px")
+        .style("font-weight", "bold")
+        .style("fill", "#555") 
+        .attr("text-anchor", "middle");
+
+    // 2. Gradient Bar
+    svg.append("rect")
+        .attr("width", legendWidth)
+        .attr("height", legendHeight)
+        .style("fill", "url(#linear-gradient)")
+        .attr("transform", `translate(${legendX},${legendY})`)
+        .style("stroke", "#e5e7eb");
+
+    // 3. Bottom Labels (Deflation / Inflation)
+    svg.append("text")
+        .attr("x", legendX)
+        .attr("y", legendY + 22) // Below the bar
+        .text("Deflation (<100)")
+        .style("font-size", "10px")
+        .attr("text-anchor", "start")
+        .attr("fill", "#4575b4");
+
+    svg.append("text")
+        .attr("x", legendX + legendWidth)
+        .attr("y", legendY + 22) // Below the bar
+        .text("Inflation (>100)")
+        .style("font-size", "10px")
+        .attr("text-anchor", "end")
+        .attr("fill", "#d73027");
 
     // --- Convert wide → long format ---
     const years = data.columns.slice(1);       // Year columns
@@ -43,11 +96,11 @@ d3.csv("data/CPI_average_year.csv").then(data => {
 
     const y = d3.scaleBand().range([0, height]).domain(commodities).padding(0.05);
     svg.append("g")
-        .style("font-size", "14px")
-        .call(d3.axisLeft(y).tickFormat(d => d.split(' ')[0]))
+        .style("font-size", "13px")
+        .call(d3.axisLeft(y).tickFormat(d => d.split(' ')[0])) 
         .select(".domain").remove();
 
-    // --- Color scale (<100 blue, 100 white, >100 red) ---
+    // --- Color scale ---
     const myColor = d3.scaleLinear()
         .domain([95, 100, 115])
         .range(["#4575b4", "#ffffff", "#d73027"])
@@ -64,18 +117,18 @@ d3.csv("data/CPI_average_year.csv").then(data => {
         .attr("width", x.bandwidth())
         .attr("height", y.bandwidth())
         .style("fill", d => myColor(d.value))
-        .style("rx", 4)
-        .style("ry", 4)
+        .style("rx", 3)
+        .style("ry", 3)
         .on("mouseover", function () {
             tooltip.style("opacity", 1);
-            d3.select(this).style("stroke", "black").style("stroke-width", 2);
+            d3.select(this).style("stroke", "#111").style("stroke-width", 2);
         })
         .on("mousemove", function (event, d) {
             tooltip.html(`
                 <b>${d.group}</b><br>
                 Year: ${d.year}<br>
                 Index: <b>${d.value.toFixed(2)}</b><br>
-                <span style="font-size:10px; color:#ccc">
+                <span style="font-size:11px; color:#666">
                     ${d.value > 100 ? "Inflation" : "Deflation"}
                 </span>
             `)
@@ -86,59 +139,4 @@ d3.csv("data/CPI_average_year.csv").then(data => {
             tooltip.style("opacity", 0);
             d3.select(this).style("stroke", "none");
         });
-
-    // --- Legend ---
-    const defs = svg.append("defs");
-    const linearGradient = defs.append("linearGradient")
-        .attr("id", "linear-gradient");
-
-    linearGradient.append("stop").attr("offset", "0%").attr("stop-color", "#4575b4");
-    linearGradient.append("stop").attr("offset", "50%").attr("stop-color", "#ffffff");
-    linearGradient.append("stop").attr("offset", "100%").attr("stop-color", "#d73027");
-
-    const legendWidth = 300;
-    const legendHeight = 15;
-    const legendX = (width - legendWidth) / 2;
-    const legendY = height + 60;
-
-    svg.append("rect")
-        .attr("width", legendWidth)
-        .attr("height", legendHeight)
-        .style("fill", "url(#linear-gradient)")
-        .attr("transform", `translate(${legendX},${legendY})`)
-        .style("stroke", "#ccc");
-
-    svg.append("text")
-        .attr("x", legendX + legendWidth / 2)
-        .attr("y", legendY - 8)
-        .text("Stable (100)")
-        .style("font-size", "12px")
-        .style("font-weight", "bold")
-        .attr("text-anchor", "middle")
-        .attr("fill", "#555");
-
-    svg.append("text")
-        .attr("x", legendX)
-        .attr("y", legendY + 28)
-        .text("Deflation (<100)")
-        .style("font-size", "12px")
-        .attr("text-anchor", "start")
-        .attr("fill", "#4575b4");
-
-    svg.append("text")
-        .attr("x", legendX + legendWidth)
-        .attr("y", legendY + 28)
-        .text("Inflation (>100)")
-        .style("font-size", "12px")
-        .attr("text-anchor", "end")
-        .attr("fill", "#d73027");
-
-    // --- X-axis label ---
-    svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("x", width)
-        .attr("y", height + 40)
-        .style("font-weight", "bold")
-        .attr("fill", "#fff")
-        .text("Year");
 });
