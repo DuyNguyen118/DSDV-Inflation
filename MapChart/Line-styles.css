@@ -148,18 +148,18 @@
     font-family: var(--font-body);
     font-size: 13px;
     color: #4b5563;
+    margin-left: 40px;
 }
 
 .legend-item {
     display: flex;
-    align-items: center;
+    align-items: flex;
 }
 
 .legend-color {
     width: 12px;
     height: 12px;
     border-radius: 2px;
-    margin-right: 8px;
 }
 
 /* New high-contrast colors */
@@ -176,6 +176,7 @@
     border-radius: 50px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-right: 60px;
 }
 
 .toggle-label {

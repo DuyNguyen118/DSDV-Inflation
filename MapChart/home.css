@@ -74,7 +74,6 @@
     align-items: flex-end;
     gap: 40px;
     flex-wrap: wrap;
-    margin-bottom: 100px;
 }
 
 /* 4. Cart Card Styling */
@@ -323,7 +322,7 @@
 #team {
     padding: 0px 20px;
     background-color: #000;
-    margin: 50px auto;
+    margin: 30vh auto 50px auto;
     color: #fff;
     text-align: center;
 }
@@ -586,4 +585,63 @@
     .code-window {
         width: 100%;
     }
+}
+/* --- SECTION FLOW CONNECTOR STYLES --- */
+
+.section-flow-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 40px; /* Space from the chart above */
+    margin-bottom: 20px; /* Space before the next section */
+    position: relative;
+    z-index: 5;
+}
+
+.flow-arrow {
+    color: #111827; /* Dark Neutral */
+    margin-bottom: 10px;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+.flow-text {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: #4b5563;
+    line-height: 1.5;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.flow-text strong {
+    color: #111827;
+    font-weight: 700;
+    display: block; /* Force the question to a new line/block */
+    margin-top: 4px;
+    font-size: 1.1rem;
+}
+
+/* Subtle bounce animation for the arrow */
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
+#home, #story, #global-inflation, #vietnam-cpi, #sectoral-inflation, #inflation-transmission {
+    padding-bottom: 30vh;
+    position: relative;
+}
+
+#team {
+    padding-bottom: 10vh;
+    position: relative;
 }
