@@ -115,16 +115,16 @@ function drawChart(data) {
     .attr("class", "x-axis")
     .call(xAxis)
     .call((g) => g.selectAll("text").style("fill", "#4b5563").style("font-size", "11px"))
-    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb"))
-    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
+    .call((g) => g.selectAll("line").style("stroke", "#d1d5dbbb"))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5dbbb"))
 
   const yAxisLeftG = g
     .append("g")
     .attr("class", "y-axis y-axis-left")
     .call(yAxisLeft)
     .call((g) => g.selectAll("text").style("fill", "#60a5fa").style("font-size", "11px"))
-    .call((g) => g.selectAll("line").style("stroke", "#e5e7eb").style("stroke-opacity", 1))
-    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
+    .call((g) => g.selectAll("line").style("stroke", "#d1d5dbbb").style("stroke-opacity", 1))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5dbbb"))
 
   const yAxisRightG = g
     .append("g")
@@ -133,7 +133,7 @@ function drawChart(data) {
     .call(yAxisRight)
     .call((g) => g.selectAll("text").style("fill", "#fb7185").style("font-size", "11px"))
     .call((g) => g.selectAll("line").remove())
-    .call((g) => g.select(".domain").style("stroke", "#d1d5db"))
+    .call((g) => g.select(".domain").style("stroke", "#d1d5dbbb"))
 
   const yInflLabel = svg
     .append("text")
@@ -211,7 +211,7 @@ function drawChart(data) {
 
   const focusLine = focusGroup
     .append("line")
-    .attr("stroke", "#d1d5db")
+    .attr("stroke", "#d1d5dbbb")
     .attr("stroke-width", 1)
     .attr("stroke-dasharray", "4 4")
     .style("opacity", 0)
@@ -247,12 +247,35 @@ function drawChart(data) {
 
   // Data-driven interesting events
   const eventNotes = {
-    1998: "Asian financial crisis; GDP slows while inflation rises",
-    1999: "Crisis aftermath; weak growth with inflation still elevated",
-    2008: "Global financial crisis; inflation spike with growth slowdown",
-    2011: "Post-crisis inflation flare-up amid solid growth",
-    2020: "COVID‑19 shock; growth collapse, moderate inflation",
-    2022: "Reopening + energy shock; strong growth, higher prices",
+    1996: "Normalization: Economy stabilizes post-Doi Moi reforms.",
+        1997: "Asian Financial Crisis: Regional impact dampens growth.",
+        1998: "Crisis Impact: Growth slows, inflation rises moderately.",
+        1999: "Recovery: Inflation stabilizes, growth begins to recover.",
+        2000: "Deflation: Weak domestic demand despite growth.",
+        2001: "Deflation continues: Global slowdown impacts prices.",
+        2002: "Recovery: Domestic demand picks up, prices normalize.",
+        2003: "Expansion: Strong growth, mild inflation.",
+        2004: "Heating Up: Rapid credit growth fuels inflation.",
+        2005: "Pre-WTO Boom: Strong investment drives prices up.",
+        2006: "High Growth: Economy overheats before WTO entry.",
+        2007: "WTO Accession: Massive capital inflows, asset bubbles.",
+        2008: "Crisis Spike: Oil >$140/bbl + internal overheating.",
+        2009: "Stimulus: Gov pumps money to counter global crisis.",
+        2010: "Instability: Devaluation & stimulus lag effects.",
+        2011: "Peak Instability: Resolution 11 passes to curb inflation.",
+        2012: "Stabilization: Credit tightening cools the economy.",
+        2013: "Single Digit: Inflation successfully brought under control.",
+        2014: "Low Oil: Global oil collapse aids price stability.",
+        2015: "Golden Era: High growth, record low inflation.",
+        2016: "Stable Growth: Robust exports, stable macro.",
+        2017: "Broad Growth: Strong FDI, controlled CPI.",
+        2018: "Trade War: Vietnam benefits, manufacturing boom.",
+        2019: "Peak Stability: 7% growth with <3% inflation.",
+        2020: "COVID-19: Demand shock crashes inflation.",
+        2021: "Supply Crunch: Low base effect, supply chain issues.",
+        2022: "The Divergence: High growth vs controlled CPI (subsidies).",
+        2023: "Global Slowdown: External demand weakens growth.",
+        2024: "Recovery: Gradual return to trend growth."
   }
 
   function handleEnter() {
@@ -485,7 +508,7 @@ xAxisG.call(xAxis)
 
 // Add this after the xAxisG call to style the axis lines
 xAxisG.selectAll(".domain")
-  .style("stroke", "#d1d5db")
+  .style("stroke", "#d1d5dbbb")
   .style("stroke-width", "1px");
 
 // Style the tick lines

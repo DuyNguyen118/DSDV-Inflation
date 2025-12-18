@@ -149,6 +149,7 @@
 
         <section class="full-width-chart" id="global-inflation">
             <h3><bold>Global Inflation Rate by Country</bold></h3>
+            
             <div class="Map-slider-container">
                 <button id="map-play-btn" class="play-btn" aria-label="Play animation">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -156,36 +157,101 @@
                     </svg>
                 </button>
                 <div class="slider-wrapper">
-                    <label for="map-year-slider" class="Map-slider-label">Year: <span
-                            id="selected-map-year">2024</span></label>
-                    <input type="range" id="map-year-slider" min="2000" max="2024" value="2000" step="1"
-                        class="Map-slider">
+                    <label for="map-year-slider" class="Map-slider-label"><span id="selected-map-year">2024</span></label>
+                    <input type="range" id="map-year-slider" min="1996" max="2024" value="2024" step="1" class="Map-slider">
                     <div class="Map-slider-labels">
-                        <span>2000</span>
+                        <span>1996</span>
                         <span>2024</span>
                     </div>
                 </div>
             </div>
+
             <div id="global-map-container">
                 <div id="global-inflation-map"></div>
+                
+                <div id="map-overlay-global" class="map-overlay">
+                    <div class="overlay-label">GLOBAL AVG</div>
+                    <div class="overlay-value" id="global-avg-value">--%</div>
+                </div>
+                
+                <div id="map-overlay-vietnam" class="map-overlay">
+                    <div class="overlay-label">VIETNAM</div>
+                    <div class="overlay-value" id="vietnam-val-value">--%</div>
+                </div>
+
                 <div id="map-legend"></div>
+            </div>
+
+            <div class="map-insight-container">
+                <p class="map-insight-text">
+                    <strong>Global Context:</strong> Inflation is rarely isolated. When major economies sneeze, the developing world often catches a cold. Watch how global waves of red (2008, 2022) precede or coincide with spikes in local Vietnam prices, illustrating our vulnerability to imported inflation.
+                </p>
             </div>
         </section>
 
         <section class="chart-section" id="vietnam-cpi">
             <h3>Vietnam CPI Inflation vs GDP Growth</h3>
-            <div class="chart-actions">
-                <div class="axis-toggle">
-                    <span id="label-dual" class="toggle-label active">Dual axis</span>
-                    <label class="switch">
-                        <input id="axis-toggle-input" type="checkbox">
-                        <span class="Line-slider"></span>
-                    </label>
-                    <span id="label-single" class="toggle-label">Single axis</span>
+            
+            <div class="line-wrapper">
+                <div class="line-chart-area">
+                    <div class="chart-header-row">
+                        <div class="chart-legend">
+                            <div class="legend-item"><span class="legend-color color-cpi"></span>Headline CPI</div>
+                            <div class="legend-item"><span class="legend-color color-gdp"></span>GDP Growth</div>
+                        </div>
+                        <div class="axis-toggle">
+                            <span id="label-dual" class="toggle-label active">Dual axis</span>
+                            <label class="switch">
+                                <input id="axis-toggle-input" type="checkbox">
+                                <span class="Line-slider"></span>
+                            </label>
+                            <span id="label-single" class="toggle-label">Single axis</span>
+                        </div>
+                    </div>
+                    <div id="vietnam-chart-container">
+                        <svg id="vietnam-chart"></svg>
+                    </div>
+                </div>
+
+                <div class="line-narrative-timeline">
+                    <div class="timeline-line"></div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4 class="timeline-title">2008: The Oil Shock</h4>
+                            <p class="timeline-text">
+                                CPI hit <strong>23.1%</strong> as oil exceeded $140/barrel. Domestic policy failed to shield the economy from imported inflation.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4 class="timeline-title">2011: Stimulus Hangover</h4>
+                            <p class="timeline-text">
+                                Inflation reached <strong>18.7%</strong> due to post-crisis stimulus. Growth slowed to 6.4% amidst macro instability.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4 class="timeline-title">2022: The Divergence</h4>
+                            <p class="timeline-text">
+                                High GDP (<strong>8.02%</strong>) vs controlled CPI (<strong>3.15%</strong>). Stability was maintained by transferring costs to producers.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="vietnam-chart-container">
-                <svg id="vietnam-chart"></svg>
+
+            <div class="core-insight-container-full">
+                <div class="core-insight-box">
+                    <strong>Core Insight:</strong> Vietnam's stability is not constant; it is vulnerable to external supply-side shocks that overwhelm domestic policy.
+                </div>
             </div>
         </section>
 
@@ -198,7 +264,7 @@
                     
                     <div class="narrative-item">
                         <div class="narrative-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
                             </svg>
                         </div>
@@ -212,7 +278,7 @@
 
                     <div class="narrative-item">
                         <div class="narrative-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
                             </svg>
                         </div>
@@ -226,7 +292,7 @@
 
                     <div class="narrative-item">
                         <div class="narrative-icon">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
                             </svg>
                         </div>

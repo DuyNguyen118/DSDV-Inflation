@@ -95,7 +95,7 @@ a:hover {
 }
 
 .hero-copy h1 {
-font-family: 'Google Sans', sans-serif;
+    font-family: 'Google Sans', sans-serif;
     font-size: clamp(40px, 4vw, 56px);
     line-height: 1.05;
     margin-bottom: 12px;
@@ -255,6 +255,10 @@ main {
     opacity: 0;
     transform: scale(0.9);
     transition: opacity 1s ease, transform 1s ease;
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: #FFFFFF;
 }
 
 .full-width-chart.visible {
@@ -323,17 +327,17 @@ main {
 #global-map-container {
     position: relative;
     width: 100%;
-    max-width: 1000px;
-    min-height: 600px;
-    margin: -80px auto 0;
+    max-width: 1200px;
+    height: 550px;
+    margin: 0 auto;
     padding: 0;
+    overflow: hidden;
 }
 
 #global-inflation-map {
     position: relative;
     width: 100%;
-    height: 550px;
-    margin: -10px 0 0;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -379,119 +383,176 @@ main {
     cursor: not-allowed;
 }
 
-.Map-slider-container {
+/* OVERLAYS FOR BIG NUMBERS */
+.map-overlay {
+    position: absolute;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 15px;
-    margin: 20px auto;
-    justify-content: center;
-    max-width: 800px;
-    padding: 0 20px;
-}
-
-.play-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background-color: var(--secondary-color);
-    color: #ffffff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    flex-shrink: 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    position: relative;
+    pointer-events: none; /* Let clicks pass through to map */
+    text-align: center;
     z-index: 10;
 }
 
-.play-btn:hover {
-    background-color: var(--accent-color);
-    transform: scale(1.05);
+#map-overlay-global {
+    bottom: 30%; /* Atlantic Ocean approx */
+    left: 10%;
 }
 
-.play-btn:active {
-    transform: scale(0.95);
+#map-overlay-vietnam {
+    top: 30%; /* Pacific Ocean approx */
+    right: 0%;
+}
+
+.overlay-label {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #4b5563; /* Subtle text */
+    margin-bottom: 0px;
+    font-weight: 700;
+}
+
+.overlay-value {
+    font-family: var(--font-display);
+    font-size: 3rem; /* BIG TEXT */
+    font-weight: 800;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+/* Insight Box */
+.map-insight-container {
+    max-width: 800px;
+    margin: 20px auto 0 auto;
+    text-align: center;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+}
+
+.map-insight-text {
+    font-family: var(--font-body);
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Slider */
+.Map-slider-container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto 10px auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.play-btn {
+    background: transparent;
+    border: 2px solid #111827;
+    color: #111827;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-top: 15px;
+}
+
+.play-btn:hover {
+    background: #111827;
+    color: #fff;
+    transform: scale(1.05);
 }
 
 .slider-wrapper {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    align-items: center;
     position: relative;
 }
 
 .Map-slider-label {
-    display: block;
-    font-size: 16px;
-    font-weight: 500;
-    color: #000000;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.Map-slider-label span {
+    font-family: var(--font-display);
     font-weight: 700;
-    color: var(--secondary-color);
-    font-size: 18px;
+    font-size: 1.5rem;
+    color: #111827;
+    margin-bottom: 5px;
+    text-align: center;
+    display: block;
 }
 
+/* Custom Range Input */
 .Map-slider {
     width: 100%;
     height: 8px;
-    border-radius: 5px;
-    background: rgb(7, 0, 0);
+    border-radius: 4px;
+    background: transparent; /* Transparent bg for fill effect */
+    border: 1px solid #111827; /* Outline only */
     outline: none;
-    -webkit-appearance: none;
-    appearance: none;
+    cursor: pointer;
     margin: 0;
     position: relative;
     z-index: 2;
 }
 
-
+/* Thumb Styling */
 .Map-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--secondary-color);
+    background: #111827; /* Black Thumb */
     cursor: pointer;
-    transition: background 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: -7px; /* Align center */
+    box-shadow: 0 0 0 3px #fff; /* White ring */
+    transition: transform 0.2s;
 }
 
 .Map-slider::-webkit-slider-thumb:hover {
-    background: var(--accent-color);
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 
 .Map-slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: var(--secondary-color);
+    background: #111827;
     cursor: pointer;
-    border: none;
-    transition: background 0.3s ease;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 3px solid #fff;
+    transition: transform 0.2s;
 }
 
 .Map-slider::-moz-range-thumb:hover {
-    background: var(--accent-color);
-    transform: scale(1.1);
+    transform: scale(1.2);
+}
+
+/* Track Styling (for fill effect via JS) */
+.Map-slider::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: transparent; 
+    border-radius: 4px;
 }
 
 .Map-slider-labels {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin-top: 8px;
-    font-size: 12px;
-    color: var(--text-light);
+    margin-top: 5px;
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-weight: 600;
 }
 
 .chart-note {
@@ -661,6 +722,7 @@ main {
     opacity: 0;
     transition: opacity 0.2s;
     z-index: 10;
+    font-family: var(--font-body);
 }
 
 /* Charts */
@@ -695,4 +757,23 @@ main {
 .map-tooltip p {
     margin: 0;
     padding: 0;
+}
+
+@media (max-width: 900px) {
+    #global-map-container {
+        height: 400px;
+    }
+    
+    .map-overlay {
+        position: relative;
+        bottom: auto;
+        top: auto;
+        left: auto;
+        right: auto;
+        margin: 10px auto;
+    }
+    
+    .overlay-value {
+        font-size: 2rem;
+    }
 }

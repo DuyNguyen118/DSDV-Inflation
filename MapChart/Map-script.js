@@ -64,7 +64,17 @@ document.addEventListener('DOMContentLoaded', function () {
             "The Bahamas": "Bahamas, The",
             "Bahamas": "Bahamas, The",
             "Gambia": "Gambia, The",
-            "The Gambia": "Gambia, The"
+            "The Gambia": "Gambia, The",
+            "Kyrgyz Republic": "Kyrgyzstan",
+            "Libya": "Libyan Arab Jamahiriya",
+            "Moldova": "Moldova, Republic of",
+            "St. Kitts and Nevis": "Saint Kitts and Nevis",
+            "St. Lucia": "Saint Lucia",
+            "St. Vincent and the Grenadines": "Saint Vincent and the Grenadines",
+            "Turkiye": "Turkey",
+            "Hong Kong SAR, China": "Hong Kong",
+            "Macao SAR, China": "Macao",
+            "West Bank and Gaza": "Palestine"
         };
 
         const mappedName = countryNameMap[countryName];
@@ -181,6 +191,57 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
+    // Helper to update big number overlays with color coding
+    function updateBigNumberOverlays(year) {
+        // 1. Calculate Global Average
+        let totalInflation = 0;
+        let count = 0;
+        
+        Object.values(globalInflationData).forEach(countryData => {
+            const val = countryData[year.toString()];
+            if (val !== undefined && val !== null && !isNaN(val)) {
+                totalInflation += val;
+                count++;
+            }
+        });
+
+        const globalAvg = count > 0 ? (totalInflation / count).toFixed(1) : "--";
+        const globalEl = document.getElementById("global-avg-value");
+        if (globalEl) {
+            globalEl.innerText = globalAvg + "%";
+            colorCodeElement(globalEl, parseFloat(globalAvg));
+        }
+
+        // 2. Get Vietnam Data
+        const vietnamData = globalInflationData["Vietnam"];
+        const vietnamVal = (vietnamData && vietnamData[year.toString()] !== undefined) 
+            ? vietnamData[year.toString()].toFixed(1) 
+            : "--";
+            
+        const vietnamEl = document.getElementById("vietnam-val-value");
+        if (vietnamEl) {
+            vietnamEl.innerText = vietnamVal + "%";
+            colorCodeElement(vietnamEl, parseFloat(vietnamVal));
+        }
+    }
+
+    // Helper to color text based on map legend scale
+    function colorCodeElement(element, value) {
+        if (isNaN(value)) {
+            element.style.color = "#333";
+            return;
+        }
+        
+        // Matches the customColorScale range
+            if (value < -5) element.style.color = "#2e7d32";     
+            else if (value < 0) element.style.color = "#66bb6a"; 
+            else if (value < 2) element.style.color = "#ffeb3b"; 
+            else if (value < 5) element.style.color = "#ff9800"; 
+            else if (value < 10) element.style.color = "#f44336"; 
+            else if (value < 20) element.style.color = "#c62828"; 
+            else element.style.color = "#8e0000";   
+    }
+
     // Create map with TopoJSON
     function createGlobalMap() {
         const container = d3.select("#global-inflation-map");
@@ -188,8 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const width = Math.min(1000, window.innerWidth - 60);
         const height = 600;
-        const margin = { top: 20, right: 20, bottom: 20, left: 20 };
-
+        
         const svg = container
             .append("svg")
             .attr("width", width)
@@ -206,29 +266,18 @@ document.addEventListener('DOMContentLoaded', function () {
         // Convert TopoJSON to GeoJSON
         const countries = topojson.feature(worldMap, worldMap.objects.countries);
 
-        // Get all inflation values for the selected year to create color scale
+        // Calculate Scale Range
         const inflationValues = [];
         countries.features.forEach(d => {
             const countryName = d.properties.NAME || d.properties.name;
             const countryData = findCountryData(countryName);
-
             if (countryData) {
                 const value = countryData[selectedMapYear.toString()];
-                if (value !== undefined && value !== null && !isNaN(value)) {
-                    inflationValues.push(value);
-                }
+                if (value !== undefined && !isNaN(value)) inflationValues.push(value);
             }
         });
 
-        // Create color scale
-        const minInflation = d3.min(inflationValues) || 0;
-        const maxInflation = d3.max(inflationValues) || 10;
-
-        // Create a color scale that handles negative, low, moderate, and high inflation
-        const colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
-            .domain([maxInflation, Math.min(minInflation, -5)]); // Reverse so red = high, green = low/negative
-
-        // Alternative: Use a custom color scale for better visualization
+        // Use a custom color scale matching the legend
         const customColorScale = d3.scaleThreshold()
             .domain([-5, 0, 2, 5, 10, 20, 50])
             .range(["#2e7d32", "#66bb6a", "#ffeb3b", "#ff9800", "#f44336", "#c62828", "#8e0000"]);
@@ -250,12 +299,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         return customColorScale(value);
                     }
                 }
-                return "#bdbabaff"; // No data
+                return "#e0e0e0"; // No data gray
             })
             .on("mouseover", function (event, d) {
                 d3.select(this)
-                    .style("opacity", 0.75)  // Make the country slightly transparent
-                    .style("filter", "brightness(0.75)");  // Make it slightly brighter
+                    .style("opacity", 0.5)
+                    
                 const countryName = d.properties.NAME || d.properties.name;
                 const countryData = findCountryData(countryName);
 
@@ -272,25 +321,27 @@ document.addEventListener('DOMContentLoaded', function () {
                     .attr("class", "map-tooltip")
                     .style("opacity", 0);
 
-                tooltip.transition()
-                    .duration(200)
-                    .style("opacity", .9);
+                tooltip.transition().duration(200).style("opacity", 0.95);
 
                 tooltip.html(`
                     <h4>${countryName}</h4>
                     <p>Year: ${selectedMapYear}</p>
-                    <p>Inflation Rate: ${inflationRate}</p>
+                    <p>Inflation Rate: <strong>${inflationRate}</strong></p>
                 `)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function () {
                 d3.select(this)
-                    .style("opacity", 1)  // Restore full opacity
-                    .style("filter", "brightness(1)");  // Restore original brightness
+                    .style("opacity", 1)
+                    .style("stroke", "#fff")
+                    .style("stroke-width", 0.5);
 
                 d3.selectAll(".map-tooltip").remove();
             });
+
+        // Update Overlays
+        updateBigNumberOverlays(selectedMapYear);
 
         // Create legend
         createMapLegend(customColorScale);
@@ -317,24 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const path = d3.geoPath().projection(projection);
 
-        // Similar implementation for GeoJSON format
         const countries = worldMap.features || worldMap;
-
-        const inflationValues = [];
-        countries.forEach(d => {
-            const countryName = d.properties.name || d.properties.NAME;
-            const countryData = findCountryData(countryName);
-
-            if (countryData) {
-                const value = countryData[selectedMapYear.toString()];
-                if (value !== undefined && value !== null && !isNaN(value)) {
-                    inflationValues.push(value);
-                }
-            }
-        });
-
-        const minInflation = d3.min(inflationValues) || 0;
-        const maxInflation = d3.max(inflationValues) || 10;
 
         const customColorScale = d3.scaleThreshold()
             .domain([-5, 0, 2, 5, 10, 20, 50])
@@ -352,14 +386,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
-                    if (value !== undefined && value !== null && !isNaN(value)) {
+                    if (value !== undefined && !isNaN(value)) {
                         return customColorScale(value);
                     }
                 }
                 return "#e0e0e0";
             })
             .on("mouseover", function (event, d) {
-                d3.select(this).attr("stroke", "#333").attr("stroke-width", 2);
+                d3.select(this).attr("stroke", "#333").attr("stroke-width", 1.5);
 
                 const countryName = d.properties.name || d.properties.NAME;
                 const countryData = findCountryData(countryName);
@@ -367,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let inflationRate = "No data";
                 if (countryData) {
                     const value = countryData[selectedMapYear.toString()];
-                    if (value !== undefined && value !== null && !isNaN(value)) {
+                    if (value !== undefined && !isNaN(value)) {
                         inflationRate = value.toFixed(2) + "%";
                     }
                 }
@@ -377,12 +411,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     .attr("class", "map-tooltip")
                     .style("opacity", 0);
 
-                tooltip.transition().duration(200).style("opacity", .9);
+                tooltip.transition().duration(200).style("opacity", 0.95);
 
                 tooltip.html(`
                     <h4>${countryName}</h4>
                     <p>Year: ${selectedMapYear}</p>
-                    <p>Inflation Rate: ${inflationRate}</p>
+                    <p>Inflation Rate: <strong>${inflationRate}</strong></p>
                 `)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
@@ -392,6 +426,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 d3.selectAll(".map-tooltip").remove();
             });
 
+        updateBigNumberOverlays(selectedMapYear);
         createMapLegend(customColorScale);
     }
 
@@ -422,53 +457,67 @@ document.addEventListener('DOMContentLoaded', function () {
             .style("flex-wrap", "wrap")
             .style("justify-content", "center")
             .style("align-items", "center")
-            .style("gap", "10px");
+            .style("gap", "12px");
 
         legendItems.forEach((item, i) => {
             const itemDiv = legend.append("div")
                 .attr("class", "legend-item")
                 .style("display", "inline-flex")
                 .style("align-items", "center")
-                .style("margin", "0 5px");
+                .style("gap", "6px");
 
             itemDiv.append("div")
                 .attr("class", "legend-color")
                 .style("background-color", item.color)
-                .style("width", "25px")
-                .style("height", "15px")
-                .style("border", "1px solid #999");
+                .style("width", "20px")
+                .style("height", "12px")
+                .style("border", "1px solid rgba(0,0,0,0.1)")
+                .style("border-radius", "2px");
 
             const label = i === 0
                 ? `< ${item.max}%`
                 : i === legendItems.length - 1
                     ? `> ${item.min}%`
-                    : `${item.min}% - ${item.max}%`;
+                    : `${item.min}-${item.max}%`;
 
             itemDiv.append("span")
-                .style("font-size", "12px")
-                .style("color", "#000000")
+                .style("font-size", "11px")
+                .style("color", "#4b5563")
                 .text(label);
         });
     }
 
-    // Set up map year slider
-    // Set up map year slider and play button
+    // --- Slider & Play Button Logic ---
     const mapYearSlider = document.getElementById('map-year-slider');
     const mapYearDisplay = document.getElementById('selected-map-year');
     const playButton = document.getElementById('map-play-btn');
 
     let isPlaying = false;
     let playInterval = null;
-    const minYear = 2000;
+    const minYear = 2000; // Adjusted based on slider HTML
     const maxYear = 2024;
-    const playSpeed = 800; // ms per year
+    const playSpeed = 800; 
+
+    // Update the slider background fill logic
+    function updateSliderFill(slider) {
+        if (!slider) return;
+        const min = parseInt(slider.min);
+        const max = parseInt(slider.max);
+        const val = parseInt(slider.value);
+        const percentage = ((val - min) / (max - min)) * 100;
+        
+        // Fill with black up to thumb, transparent after
+        slider.style.background = `linear-gradient(to right, #111827 ${percentage}%, transparent ${percentage}%)`;
+    }
 
     function updateMapYear(year) {
         selectedMapYear = year;
         if (mapYearDisplay) mapYearDisplay.textContent = selectedMapYear;
-        if (mapYearSlider) mapYearSlider.value = selectedMapYear;
+        if (mapYearSlider) {
+            mapYearSlider.value = selectedMapYear;
+            updateSliderFill(mapYearSlider);
+        }
 
-        // Recreate map with new year data
         if (worldMap) {
             if (worldMap.objects) {
                 createGlobalMap();
@@ -482,37 +531,36 @@ document.addEventListener('DOMContentLoaded', function () {
         isPlaying = !isPlaying;
 
         if (isPlaying) {
-            // Check if we are at the end, if so, restart from beginning
+            // Restart if at end
             if (selectedMapYear >= maxYear) {
                 updateMapYear(minYear);
             }
 
-            // Change icon to Pause
+            // Pause Icon
             playButton.innerHTML = `
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    <rect x="6" y="4" width="4" height="16"></rect>
+                    <rect x="14" y="4" width="4" height="16"></rect>
                 </svg>
             `;
 
-            // Start animation
             playInterval = setInterval(() => {
                 let nextYear = selectedMapYear + 1;
                 if (nextYear > maxYear) {
-                    togglePlay(); // Stop playing when reached the end
+                    togglePlay(); 
                     return;
                 }
                 updateMapYear(nextYear);
             }, playSpeed);
 
         } else {
-            // Change icon to Play
+            // Play Icon
             playButton.innerHTML = `
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
                 </svg>
             `;
 
-            // Stop animation
             if (playInterval) {
                 clearInterval(playInterval);
                 playInterval = null;
@@ -520,25 +568,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    if (mapYearSlider && mapYearDisplay) {
+    if (mapYearSlider) {
+        // Initial fill
+        updateSliderFill(mapYearSlider);
+        
         mapYearSlider.addEventListener('input', function () {
-            // Pause auto-play if user manually drags slider
-            if (isPlaying) {
-                togglePlay();
-            }
+            if (isPlaying) togglePlay(); // Stop play on manual interaction
             updateMapYear(parseInt(this.value));
         });
     }
 
     if (playButton) {
         playButton.addEventListener('click', function (e) {
-            e.preventDefault(); // Prevent any default behavior
+            e.preventDefault();
             togglePlay();
         });
     }
 
     // Scroll Animation Observer
-    // Scroll Animation Observer for all chart sections
     const chartSections = document.querySelectorAll('.full-width-chart, .chart-section');
 
     if (chartSections.length > 0) {
@@ -546,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function () {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Only animate once
+                    observer.unobserve(entry.target); 
                 }
             });
         }, {
@@ -558,6 +605,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Smooth Scrolling for Anchors
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -566,19 +614,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
-                // Offset for fixed header
                 const headerOffset = 100;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerOffset;
                 const startPosition = window.pageYOffset;
                 const distance = targetPosition - startPosition;
-                const duration = 500; // Slow speed as requested
+                const duration = 500;
                 let start = null;
 
                 function step(timestamp) {
                     const progress = timestamp - start;
                     const percent = Math.min(progress / duration, 1);
-
-                    const ease = percent;
+                    const ease = percent; // Linear for simplicity or add easing function
 
                     window.scrollTo(0, startPosition + distance * ease);
 
@@ -588,8 +634,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         history.pushState(null, null, targetId);
                     }
                 }
-
-                window.requestAnimationFrame(step);
+                
+                // Initialize start time
+                window.requestAnimationFrame(function(timestamp) {
+                    start = timestamp;
+                    step(timestamp);
+                });
             }
         });
     });
